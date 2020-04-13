@@ -124,6 +124,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "points-transforming-app"
 }
