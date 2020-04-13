@@ -1,0 +1,23 @@
+span {
+  color: hsla(0,0%,100%,.5);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+span:focus {
+  outline: none;
+}
+
+span:hover {
+  cursor: pointer;
+  color: hsla(0,0%,100%,.75);
+}
+
+.navigation-bar {
+  background: linear-gradient(135deg,#0143a3,#0273d4);
+  height: 8%;
+}
+
+.nav-link-clicked {
+  color: white;
+}

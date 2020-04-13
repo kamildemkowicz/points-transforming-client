@@ -7,18 +7,22 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MeasurementsComponent } from './measurements/measurements.component';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MeasurementsMenuComponent } from './measurements/measurements-menu/measurements-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     MeasurementsComponent,
-    NavigationBarComponent
+    NavigationBarComponent,
+    MeasurementsMenuComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

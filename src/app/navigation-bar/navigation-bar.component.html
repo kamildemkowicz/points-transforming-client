@@ -1,1 +1,11 @@
-kk
+<div class="d-flex flex-row flex-wrap navigation-bar p-4">
+  <span
+    class="mr-3"
+    [routerLink]="['']"
+    [routerLinkActive]="'nav-link-clicked'"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    Dashboard
+  </span>
+  <span class="mr-3" [routerLink]="['/measurements']" [routerLinkActive]="'nav-link-clicked'">Measurements</span>
+</div>
