@@ -1,1 +1,6 @@
-<p>measurements-menu works!</p>
+<div class="d-flex flex-column h-100 w-100">
+  <h3 class="mb-2 pl-2">Measurements:</h3>
+  <div class="d-flex measurement-item pl-2" *ngFor="let measurement of measurements">
+    {{measurement.name}} {{measurement.place}}
+  </div>
+</div>
