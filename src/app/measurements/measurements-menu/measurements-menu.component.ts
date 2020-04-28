@@ -1,7 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Routes } from '@angular/router';
-import { MeasurementsResolverService } from '../measurements-resolver.service';
-import { MeasurementsComponent } from '../measurements.component';
+import { Component, Input, OnInit } from '@angular/core';
 import { MeasurementsModel } from '../measurements.model';
 
 @Component({
@@ -10,30 +7,10 @@ import { MeasurementsModel } from '../measurements.model';
   styleUrls: ['./measurements-menu.component.scss']
 })
 export class MeasurementsMenuComponent implements OnInit {
-  measurements: MeasurementsModel[];
+  @Input() measurements: MeasurementsModel[];
 
-  constructor(
-    private route: ActivatedRoute
-  ) { }
+  constructor() { }
 
-  ngOnInit() {
-    this.route.data.subscribe((resolve) => {
-      this.measurements =  resolve.measurements || [];
-    });
-  }
+  ngOnInit() { }
 
 }
-
-export const measurementsRoutes: Routes = [
-  {
-    path: 'measurements',
-    component: MeasurementsComponent,
-    resolve: {
-      measurements: MeasurementsResolverService
-    }
-  }
-];
-
-export const measurementsProviders = [
-  MeasurementsResolverService
-];

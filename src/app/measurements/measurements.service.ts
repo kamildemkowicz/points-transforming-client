@@ -7,6 +7,7 @@ import { ADDR_SERVER } from '../general/app-const';
 @Injectable()
 export class MeasurementsService {
   measurementsUrl = ADDR_SERVER + 'measurements';
+  measurementUrl = ADDR_SERVER + 'measurements';
 
   constructor(
     private http: HttpClient
@@ -14,5 +15,9 @@ export class MeasurementsService {
 
   getMeasurements(): Observable<MeasurementsModel[]> {
     return this.http.get<MeasurementsModel[]>(this.measurementsUrl);
+  }
+
+  getMeasurement(measurementId: number): Observable<MeasurementsModel> {
+    return this.http.get<MeasurementsModel>(this.measurementUrl + '/' + measurementId);
   }
 }
