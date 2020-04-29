@@ -15,6 +15,9 @@ import { MeasurementsService } from './measurements/measurements.service';
 import { MeasurementComponent, measurementProviders } from './measurements/measurement/measurement.component';
 import { DetailsComponent } from './measurements/measurement/details/details.component';
 import { MapComponent } from './measurements/measurement/map/map.component';
+import { PicketsTableComponent } from './measurements/pickets/pickets-table/pickets-table.component';
+import { PicketsComponent } from './measurements/pickets/pickets.component';
+import { NewMeasurementComponent } from './create-new/new-measurement/new-measurement.component';
 
 @NgModule({
   declarations: [
@@ -25,12 +28,15 @@ import { MapComponent } from './measurements/measurement/map/map.component';
     MeasurementsMenuComponent,
     MeasurementComponent,
     DetailsComponent,
-    MapComponent
+    MapComponent,
+    PicketsTableComponent,
+    PicketsComponent,
+    NewMeasurementComponent
   ],
   imports: [
     BrowserModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAVotiHjf1n6CuiRMrBDj1CYolLkWq9WAg',
+      apiKey: 'apiKey',
       libraries: ['places']
     }),
     AppRoutingModule,

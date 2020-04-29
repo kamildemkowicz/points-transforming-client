@@ -1,7 +1,7 @@
 <div class="d-flex flex-column h-100 w-100">
-  <h3 class="mt-2 mb-2 pl-2">Measurements:</h3>
+  <h3 class="mt-2 mb-2 pl-3">Measurements:</h3>
   <div
-    class="d-flex flex-column measurement-item pl-2 pb-2"
+    class="d-flex flex-column measurement-item pl-3 pb-2"
     *ngFor="let measurement of measurements"
     [routerLink]="[measurement.id]"
     [routerLinkActive]="'measurement-item-clicked'"

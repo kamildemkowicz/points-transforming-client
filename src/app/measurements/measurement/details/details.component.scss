@@ -1,0 +1,10 @@
+@import '../../../../assets/css/colors';
+
+.measurement-item-label {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.measurement-row {
+  border-bottom: solid 1px $grayscale-3;
+}
