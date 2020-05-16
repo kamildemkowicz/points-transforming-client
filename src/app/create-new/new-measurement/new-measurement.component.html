@@ -1,1 +1,108 @@
-<p>new-measurement works!</p>
+<div class="p-4">
+  <h3 class="pb-3">Create new measurement</h3>
+  <form [formGroup]="measurementForm" (ngSubmit)="onSubmit()">
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-column w-100 mr-3">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="name"
+            aria-describedby="measurementHelp"
+            placeholder="Enter name"
+            formControlName="name"
+          >
+          <span *ngIf="!name.valid && name.touched" class="help-block">
+        <span *ngIf="name.errors['required']" class="error-message mt-1">
+          The measurements name is required!
+        </span>
+      </span>
+          <small *ngIf="!name.touched" id="measurementHelp" class="form-text text-muted">Enter the name of the
+            measurement.</small>
+        </div>
+        <div class="form-group">
+          <label for="place">Place:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="place"
+            placeholder="Enter place"
+            formControlName="place"
+          >
+          <span *ngIf="!place.valid && place.touched" class="help-block">
+        <span *ngIf="place.errors['required']" class="error-message mt-1">
+          The measurements place is required!
+        </span>
+      </span>
+        </div>
+        <div class="form-group">
+          <label for="owner">Owner:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="owner"
+            placeholder="Enter owner"
+            aria-describedby="ownerHelp"
+            formControlName="owner"
+          >
+          <span *ngIf="!owner.valid && owner.touched" class="help-block">
+        <span *ngIf="owner.errors['required']" class="error-message mt-1">
+          The measurements owner is required!
+        </span>
+      </span>
+          <small *ngIf="!owner.touched" id="ownerHelp" class="form-text text-muted">Enter the name of the owner who took
+            the measurement.</small>
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlFile1">Load pickets from file</label>
+          <input type="file" class="form-control-file" id="exampleFormControlFile1">
+        </div>
+      </div>
+      <div class="d-flex flex-column w-100">
+        <div formArrayName="pickets">
+          <h4>Pickets:</h4>
+          <button
+            class="btn btn-default"
+            type="button"
+            (click)="onAddPicket()"
+          >
+            Add picket
+          </button>
+          <div
+            class="form-group"
+            *ngFor="let picketControl of pickets; let i = index"
+          >
+            <div class="d-flex flex-row" [formGroup]="picketControl">
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control w-75 mr-2"
+                  placeholder="Enter name"
+                  formControlName="name"
+                >
+              </div>
+              <div class="form-group">
+                <input
+                  type="number"
+                  class="form-control w-75 mr-2"
+                  placeholder="Enter coordinate X"
+                  formControlName="coordinateX"
+                >
+              </div>
+              <div class="form-group">
+                <input
+                  type="number"
+                  class="form-control w-75"
+                  placeholder="Enter coordinate Y"
+                  formControlName="coordinateY"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary w-25" type="submit">Create</button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -18,6 +18,7 @@ import { MapComponent } from './measurements/measurement/map/map.component';
 import { PicketsTableComponent } from './measurements/pickets/pickets-table/pickets-table.component';
 import { PicketsComponent } from './measurements/pickets/pickets.component';
 import { NewMeasurementComponent } from './create-new/new-measurement/new-measurement.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { NewMeasurementComponent } from './create-new/new-measurement/new-measur
     AppRoutingModule,
     BrowserAnimationsModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     MeasurementsService,

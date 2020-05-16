@@ -1,5 +1,5 @@
 export class Picket {
-  picketId: string;
+  name: string;
   coordinateX: number;
   coordinateY: number;
 }
