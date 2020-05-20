@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Routes } from '@angular/router';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Routes } from '@angular/router';
 
 @Component({
-  selector: 'app-new-measurement',
-  templateUrl: './new-measurement.component.html',
-  styleUrls: ['./new-measurement.component.scss']
+  selector: 'app-edit-measurement-form',
+  templateUrl: './edit-measurement-form.component.html',
+  styleUrls: ['./edit-measurement-form.component.scss']
 })
-export class NewMeasurementComponent implements OnInit {
+export class EditMeasurementFormComponent implements OnInit {
+
   measurementForm: FormGroup;
 
   constructor() { }
@@ -59,11 +60,12 @@ export class NewMeasurementComponent implements OnInit {
     console.log(this.measurementForm);
     this.measurementForm.reset();
   }
+
 }
 
-export const createNewMeasurementRoutes: Routes = [
+export const editMeasurementRoutes: Routes = [
   {
-    path: 'create-new',
-    component: NewMeasurementComponent
+    path: 'edit/:id',
+    component: EditMeasurementFormComponent
   }
 ];

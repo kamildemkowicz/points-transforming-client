@@ -20,4 +20,8 @@ export class MeasurementsService {
   getMeasurement(measurementId: number): Observable<MeasurementsModel> {
     return this.http.get<MeasurementsModel>(this.measurementUrl + '/' + measurementId);
   }
+
+  createMeasurement(measurement: MeasurementsModel): Observable<any> {
+    return this.http.post(this.measurementsUrl, measurement);
+  }
 }

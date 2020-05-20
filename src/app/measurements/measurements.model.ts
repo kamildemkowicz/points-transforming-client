@@ -5,5 +5,6 @@ export class MeasurementsModel {
   name: string;
   creationDate: string;
   place: string;
+  owner: string;
   pickets: Picket[];
 }

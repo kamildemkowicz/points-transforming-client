@@ -5,7 +5,7 @@ import { AgmCoreModule } from '@agm/core';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent, dashboardProviders } from './dashboard/dashboard.component';
 import { MeasurementsComponent, measurementsProviders } from './measurements/measurements.component';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,6 +19,9 @@ import { PicketsTableComponent } from './measurements/pickets/pickets-table/pick
 import { PicketsComponent } from './measurements/pickets/pickets.component';
 import { NewMeasurementComponent } from './create-new/new-measurement/new-measurement.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MeasurementBoardComponent } from './dashboard/measurement-board/measurement-board.component';
+import { EditMeasurementFormComponent } from './edit-measurement-form/edit-measurement-form.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MapComponent,
     PicketsTableComponent,
     PicketsComponent,
-    NewMeasurementComponent
+    NewMeasurementComponent,
+    MeasurementBoardComponent,
+    EditMeasurementFormComponent
   ],
   imports: [
     BrowserModule,
@@ -44,12 +49,14 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     NgbModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSpinnerModule
   ],
   providers: [
     MeasurementsService,
     measurementsProviders,
-    measurementProviders
+    measurementProviders,
+    dashboardProviders
   ],
   bootstrap: [AppComponent]
 })

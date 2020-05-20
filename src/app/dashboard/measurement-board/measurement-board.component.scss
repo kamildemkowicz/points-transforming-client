@@ -1,0 +1,15 @@
+@import '../../../assets/css/colors';
+
+.label-text {
+  font-weight: 500;
+}
+
+.container-border {
+  border: solid 1px $grayscale-3;
+  border-radius: 9px;
+}
+
+.container-border:hover {
+  background: $grayscale-4;
+  cursor: pointer;
+}
