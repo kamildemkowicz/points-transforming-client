@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Picket } from '../../pickets/picket.model';
 
 @Component({
   selector: 'app-map',
@@ -8,10 +9,11 @@ import {Component, Input, OnInit} from '@angular/core';
 export class MapComponent implements OnInit {
   @Input() heightMap = '600px';
   @Input() widthMap = '700px';
+  @Input() pickets: Picket[];
 
   title = 'AGM project';
-  latitude: number;
-  longitude: number;
+  currentDisplayedLatitude: number;
+  currentDisplayedLongitude: number;
   zoom: number;
 
   constructor() { }
@@ -21,11 +23,15 @@ export class MapComponent implements OnInit {
   }
 
   private setCurrentLocation() {
-    if ('geolocation' in navigator) {
+    this.zoom = 15;
+
+    if (this.pickets && this.pickets.length) {
+      this.currentDisplayedLatitude = this.pickets[0].coordinateY;
+      this.currentDisplayedLongitude = this.pickets[0].coordinateY;
+    } else if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.latitude = position.coords.latitude;
-        this.longitude = position.coords.longitude;
-        this.zoom = 15;
+        this.currentDisplayedLatitude = position.coords.latitude;
+        this.currentDisplayedLongitude = position.coords.longitude;
       });
     }
   }

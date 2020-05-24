@@ -24,4 +24,8 @@ export class MeasurementsService {
   createMeasurement(measurement: MeasurementsModel): Observable<any> {
     return this.http.post(this.measurementsUrl, measurement);
   }
+
+  updateMeasurement(measurement: MeasurementsModel): Observable<any> {
+    return this.http.post(this.measurementsUrl + '/' + measurement.id, measurement);
+  }
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Routes } from '@angular/router';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MeasurementsService } from '../../measurements/measurements.service';
+import { MeasurementsModel } from '../../measurements/measurements.model';
 
 @Component({
   selector: 'app-new-measurement',
@@ -10,7 +12,9 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 export class NewMeasurementComponent implements OnInit {
   measurementForm: FormGroup;
 
-  constructor() { }
+  constructor(
+    private measurementsService: MeasurementsService
+  ) { }
 
   ngOnInit(): void {
     this.measurementForm = new FormGroup({
@@ -56,7 +60,9 @@ export class NewMeasurementComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.measurementForm);
+    this.measurementsService.createMeasurement(this.measurementForm.value).subscribe((measurementCreated: MeasurementsModel) => {
+      console.log(measurementCreated);
+    });
     this.measurementForm.reset();
   }
 }

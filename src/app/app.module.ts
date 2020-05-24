@@ -22,6 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MeasurementBoardComponent } from './dashboard/measurement-board/measurement-board.component';
 import { EditMeasurementFormComponent } from './edit-measurement-form/edit-measurement-form.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { HistoryComponent } from './history/history.component';
 
 @NgModule({
   declarations: [
@@ -37,12 +38,13 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     PicketsComponent,
     NewMeasurementComponent,
     MeasurementBoardComponent,
-    EditMeasurementFormComponent
+    EditMeasurementFormComponent,
+    HistoryComponent
   ],
   imports: [
     BrowserModule,
     AgmCoreModule.forRoot({
-      apiKey: 'apiKey',
+      apiKey: 'AIzaSyAVotiHjf1n6CuiRMrBDj1CYolLkWq9WAg',
       libraries: ['places']
     }),
     AppRoutingModule,

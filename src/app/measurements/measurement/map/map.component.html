@@ -1,8 +1,18 @@
 <agm-map
-  [latitude]="latitude"
-  [longitude]="longitude"
+  [latitude]="currentDisplayedLatitude"
+  [longitude]="currentDisplayedLongitude"
   [zoom]="zoom"
+  [fullscreenControl]="true"
+  [fullscreenControlOptions]="{ position: 10 }"
+  [mapTypeControl]="true"
+  [mapTypeControlOptions]="{ mapTypeIds: ['roadmap', 'hybrid', 'satellite', 'terrain'], style: 2 }"
   [ngStyle]="{ 'height': heightMap, 'width': widthMap }"
 >
-  <agm-marker [latitude]="latitude" [longitude]="longitude"></agm-marker>
+  <agm-marker
+    *ngFor="let picket of pickets"
+    [title]="picket.name"
+    [label]="picket.picketInternalId"
+    [latitude]="picket.coordinateY"
+    [longitude]="picket.coordinateX"
+  ></agm-marker>
 </agm-map>

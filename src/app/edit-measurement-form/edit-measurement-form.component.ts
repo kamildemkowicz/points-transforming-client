@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Routes } from '@angular/router';
+import { ActivatedRoute, Routes } from '@angular/router';
+import { MeasurementResolverService } from '../measurements/measurement/measurement-resolver.service';
+import { MeasurementsModel } from '../measurements/measurements.model';
+import {MeasurementsService} from "../measurements/measurements.service";
 
 @Component({
   selector: 'app-edit-measurement-form',
@@ -8,21 +11,27 @@ import { Routes } from '@angular/router';
   styleUrls: ['./edit-measurement-form.component.scss']
 })
 export class EditMeasurementFormComponent implements OnInit {
-
+  measurement: MeasurementsModel;
   measurementForm: FormGroup;
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private measurementsService: MeasurementsService
+  ) { }
 
   ngOnInit(): void {
     this.measurementForm = new FormGroup({
+      id: new FormControl(null),
+      creationDate: new FormControl(null),
       name: new FormControl(null, [Validators.required]),
       place: new FormControl(null, [Validators.required]),
       owner: new FormControl(null, [Validators.required]),
       pickets: new FormArray([])
     });
 
-    this.measurementForm.statusChanges.subscribe((value) => {
-      console.log(value);
+    this.route.data.subscribe((resolve) => {
+      this.measurement = resolve.measurement;
+      this.measurementForm.setValue(this.measurement);
     });
   }
 
@@ -57,7 +66,9 @@ export class EditMeasurementFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.measurementForm);
+    this.measurementsService.updateMeasurement(this.measurementForm.value).subscribe((measurementUpdated: MeasurementsModel) => {
+      console.log(measurementUpdated);
+    });
     this.measurementForm.reset();
   }
 
@@ -66,6 +77,13 @@ export class EditMeasurementFormComponent implements OnInit {
 export const editMeasurementRoutes: Routes = [
   {
     path: 'edit/:id',
-    component: EditMeasurementFormComponent
+    component: EditMeasurementFormComponent,
+    resolve: {
+      measurement: MeasurementResolverService
+    }
   }
+];
+
+export const editMeasurementProviders = [
+  MeasurementResolverService
 ];
