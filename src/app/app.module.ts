@@ -44,7 +44,7 @@ import { HistoryComponent } from './history/history.component';
   imports: [
     BrowserModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAVotiHjf1n6CuiRMrBDj1CYolLkWq9WAg',
+      apiKey: 'apikey',
       libraries: ['places']
     }),
     AppRoutingModule,
