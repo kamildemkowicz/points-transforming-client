@@ -1,0 +1,71 @@
+<div class="modal-content">
+  <form [formGroup]="picketForm" (ngSubmit)="onSubmit()">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Create new picket</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+      <div class="d-flex flex-column w-100 mr-3">
+        <div class="form-group">
+          <label for="name">Picket name:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="name"
+            placeholder="Enter picket name"
+            formControlName="name"
+          >
+          <span *ngIf="!name.valid && name.touched" class="help-block">
+            <span *ngIf="name.errors['required']" class="error-message mt-1">
+              The picket name is required!
+            </span>
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="coordinateX">Coordinate X:</label>
+          <input
+            type="number"
+            class="form-control w-75"
+            id="coordinateX"
+            placeholder="Enter coordinate X"
+            formControlName="coordinateX"
+          >
+          <span *ngIf="!coordinateX.valid && coordinateX.touched" class="help-block">
+            <span *ngIf="coordinateX.errors['required']" class="error-message mt-1">
+              Coordinate X is required!
+            </span>
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="coordinateY">Coordinate Y:</label>
+          <input
+            type="number"
+            class="form-control w-75"
+            id="coordinateY"
+            placeholder="Enter coordinate Y"
+            formControlName="coordinateY"
+          >
+          <span *ngIf="!coordinateY.valid && coordinateY.touched" class="help-block">
+            <span *ngIf="coordinateY.errors['required']" class="error-message mt-1">
+              Coordinate Y is required!
+            </span>
+          </span>
+        </div>
+      </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="picketForm.invalid || picketForm.untouched"
+    >
+      Save changes
+    </button>
+  </div>
+  </form>
+</div>

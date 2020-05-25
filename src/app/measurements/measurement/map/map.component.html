@@ -6,13 +6,20 @@
   [fullscreenControlOptions]="{ position: 10 }"
   [mapTypeControl]="true"
   [mapTypeControlOptions]="{ mapTypeIds: ['roadmap', 'hybrid', 'satellite', 'terrain'], style: 2 }"
+  [disableDoubleClickZoom]="disableDoubleClickZoom"
   [ngStyle]="{ 'height': heightMap, 'width': widthMap }"
+  (mapDblClick)="onMapDblClicked($event)"
 >
   <agm-marker
     *ngFor="let picket of pickets"
     [title]="picket.name"
-    [label]="picket.picketInternalId"
+    [label]="{
+		  color: '#d64161',
+		  fontWeight: 'bold',
+		  text: picket.picketInternalId
+	  }"
     [latitude]="picket.coordinateY"
     [longitude]="picket.coordinateX"
+    [iconUrl]="iconUrl"
   ></agm-marker>
 </agm-map>

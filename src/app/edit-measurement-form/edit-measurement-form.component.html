@@ -61,55 +61,54 @@
         >
           Create measurement
         </button>
-      </div>
-      <div class="d-flex flex-column w-100 pickets-table-form">
-        <label class="mb-2">Pickets:</label>
-        <div formArrayName="pickets" class="mb-2 overflow-auto">
-          <div
-            class="form-group"
-            *ngFor="let picketControl of pickets; let i = index"
-          >
-            <div class="d-flex flex-row" [formGroup]="picketControl">
-              <div class="form-group w-100 mr-2">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter name"
-                  formControlName="name"
+        <div class="d-flex flex-column w-100 pickets-table-form">
+          <label class="mb-2 pt-2">Pickets:</label>
+          <div formArrayName="pickets" class="mb-2 overflow-auto">
+            <div
+              class="form-group"
+              *ngFor="let picketControl of pickets; let i = index"
+            >
+              <div class="d-flex flex-row" [formGroup]="picketControl">
+                <div class="form-group w-100 mr-2">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter picket name"
+                    formControlName="name"
+                  >
+                </div>
+                <div class="form-group w-75 mr-2">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Enter coordinate X"
+                    formControlName="coordinateX"
+                  >
+                </div>
+                <div class="form-group w-75 mr-2">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Enter coordinate Y"
+                    formControlName="coordinateY"
+                  >
+                </div>
+                <button
+                  type="button"
+                  (click)="onRemovePicket(i)"
+                  class="close h-100 pt-2 pr-2"
+                  aria-label="Close"
                 >
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
-              <div class="form-group w-75 mr-2">
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="Enter coordinate X"
-                  formControlName="coordinateX"
-                >
-              </div>
-              <div class="form-group w-75 mr-2">
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="Enter coordinate Y"
-                  formControlName="coordinateY"
-                >
-              </div>
-              <button
-                type="button"
-                (click)="onRemovePicket(i)"
-                class="close h-100 pt-2 pr-2"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
             </div>
           </div>
-        </div>
-        <div class="d-flex flex-row">
+          <div class="d-flex flex-row">
           <button
             class="btn btn-primary mr-2 w-25"
             type="button"
-            (click)="onAddPicket()"
+            (click)="createEmptyPicketForm()"
           >
             Add picket
           </button>
@@ -118,6 +117,17 @@
             <input type="file" class="form-control-file w-100" id="exampleFormControlFile1">
           </div>
         </div>
+        </div>
+      </div>
+      <div class="d-flex w-100">
+        <app-map
+          [pickets]="copyPicket"
+          [heightMap]="'700px'"
+          [widthMap]="'900px'"
+          [disableDoubleClickZoom]="true"
+          (picketAdded)="onPicketAddedFromMap($event)"
+        >
+        </app-map>
       </div>
     </div>
   </form>

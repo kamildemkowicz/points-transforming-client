@@ -23,6 +23,7 @@ import { MeasurementBoardComponent } from './dashboard/measurement-board/measure
 import { EditMeasurementFormComponent } from './edit-measurement-form/edit-measurement-form.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HistoryComponent } from './history/history.component';
+import { AddPicketModalComponent } from './edit-measurement-form/add-picket-modal/add-picket-modal.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { HistoryComponent } from './history/history.component';
     NewMeasurementComponent,
     MeasurementBoardComponent,
     EditMeasurementFormComponent,
-    HistoryComponent
+    HistoryComponent,
+    AddPicketModalComponent
   ],
   imports: [
     BrowserModule,
@@ -60,6 +62,9 @@ import { HistoryComponent } from './history/history.component';
     measurementProviders,
     dashboardProviders
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    AddPicketModalComponent
+  ]
 })
 export class AppModule { }

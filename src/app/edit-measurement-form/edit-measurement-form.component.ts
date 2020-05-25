@@ -1,22 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Routes } from '@angular/router';
 import { MeasurementResolverService } from '../measurements/measurement/measurement-resolver.service';
 import { MeasurementsModel } from '../measurements/measurements.model';
-import {MeasurementsService} from "../measurements/measurements.service";
+import { MeasurementsService } from '../measurements/measurements.service';
+import { Picket } from '../measurements/pickets/picket.model';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { AddPicketModalComponent } from './add-picket-modal/add-picket-modal.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-measurement-form',
   templateUrl: './edit-measurement-form.component.html',
   styleUrls: ['./edit-measurement-form.component.scss']
 })
-export class EditMeasurementFormComponent implements OnInit {
+export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   measurement: MeasurementsModel;
   measurementForm: FormGroup;
+  picketAddedSubscription: Subscription;
+  copyPicket: Picket[];
 
   constructor(
     private route: ActivatedRoute,
-    private measurementsService: MeasurementsService
+    private measurementsService: MeasurementsService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -31,8 +38,26 @@ export class EditMeasurementFormComponent implements OnInit {
 
     this.route.data.subscribe((resolve) => {
       this.measurement = resolve.measurement;
-      this.measurementForm.setValue(this.measurement);
+
+      if (this.measurement) {
+        this.copyPicket = this.measurement.pickets.slice();
+        this.measurementForm.patchValue({
+          name: this.measurement.name,
+          place: this.measurement.place,
+          owner: this.measurement.owner
+        });
+
+        this.measurement.pickets.forEach((picket) => {
+          this.onAddPicket(picket);
+        });
+      }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.picketAddedSubscription) {
+      this.picketAddedSubscription.unsubscribe();
+    }
   }
 
   get name() {
@@ -51,7 +76,7 @@ export class EditMeasurementFormComponent implements OnInit {
     return (this.measurementForm.get('pickets') as FormArray).controls;
   }
 
-  onAddPicket() {
+  createEmptyPicketForm() {
     const control = new FormGroup({
       name: new FormControl(null, [Validators.required]),
       coordinateX: new FormControl(null, [Validators.required]),
@@ -59,6 +84,38 @@ export class EditMeasurementFormComponent implements OnInit {
     });
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
+  }
+
+  onAddPicket(picket?: Picket, copyPickets?: Picket[]) {
+    const control = new FormGroup({
+      name: new FormControl(picket.name, [Validators.required]),
+      coordinateX: new FormControl(picket.coordinateX, [Validators.required]),
+      coordinateY: new FormControl(picket.coordinateY, [Validators.required])
+    });
+
+    (this.measurementForm.get('pickets') as FormArray).push(control);
+
+    if (copyPickets) {
+      copyPickets.push(picket);
+    }
+  }
+
+  onPicketAddedFromMap(event: Picket) {
+    this.openAddPicketModal(event);
+  }
+
+  private openAddPicketModal(picket: Picket) {
+    const ngbModalOptions: NgbModalOptions = {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true
+    };
+
+    const modalRef = this.modalService.open(AddPicketModalComponent, ngbModalOptions);
+    modalRef.componentInstance.picketFromMap = picket;
+
+    this.picketAddedSubscription = modalRef.componentInstance.picketAdded.subscribe((picketAdded: Picket) => {
+      this.onAddPicket(picketAdded, this.copyPicket);
+    });
   }
 
   onRemovePicket(index: number) {
