@@ -11,15 +11,16 @@
   (mapDblClick)="onMapDblClicked($event)"
 >
   <agm-marker
-    *ngFor="let picket of pickets"
-    [title]="picket.name"
+    *ngFor="let picket of pickets; let i = index"
+    [title]="picket.picketInternalId"
     [label]="{
 		  color: '#d64161',
 		  fontWeight: 'bold',
-		  text: picket.picketInternalId
+		  text: picket.name
 	  }"
     [latitude]="picket.coordinateY"
     [longitude]="picket.coordinateX"
     [iconUrl]="iconUrl"
+    (markerClick)="onMarkerClicked($event, i)"
   ></agm-marker>
 </agm-map>

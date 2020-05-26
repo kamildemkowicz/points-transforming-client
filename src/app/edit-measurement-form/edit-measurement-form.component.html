@@ -54,13 +54,6 @@
           <small *ngIf="!owner.touched" id="ownerHelp" class="form-text text-muted">Enter the name of the owner who took
             the measurement.</small>
         </div>
-        <button
-          class="btn btn-primary w-25"
-          type="submit"
-          [disabled]="measurementForm.invalid || measurementForm.untouched"
-        >
-          Create measurement
-        </button>
         <div class="d-flex flex-column w-100 pickets-table-form">
           <label class="mb-2 pt-2">Pickets:</label>
           <div formArrayName="pickets" class="mb-2 overflow-auto">
@@ -105,18 +98,26 @@
             </div>
           </div>
           <div class="d-flex flex-row">
-          <button
-            class="btn btn-primary mr-2 w-25"
-            type="button"
-            (click)="createEmptyPicketForm()"
-          >
-            Add picket
-          </button>
+            <button
+              class="btn btn-primary mr-2 w-25"
+              type="button"
+              (click)="createEmptyPicketForm()"
+            >
+              Add picket
+            </button>
 
-          <div class="form-group d-flex flex-row mb-0 pt-1">
-            <input type="file" class="form-control-file w-100" id="exampleFormControlFile1">
+
+            <button
+              class="btn btn-primary w-25 mr-2"
+              type="submit"
+              [disabled]="measurementForm.invalid"
+            >
+              Save changes
+            </button>
+            <div class="form-group d-flex flex-row mb-0 pt-1">
+              <input type="file" class="form-control-file w-100" id="exampleFormControlFile1">
+            </div>
           </div>
-        </div>
         </div>
       </div>
       <div class="d-flex w-100">
@@ -126,6 +127,7 @@
           [widthMap]="'900px'"
           [disableDoubleClickZoom]="true"
           (picketAdded)="onPicketAddedFromMap($event)"
+          (picketEdited)="onPicketEditedFromMap($event)"
         >
         </app-map>
       </div>

@@ -13,6 +13,7 @@ export class MapComponent implements OnInit {
   @Input() disableDoubleClickZoom = false;
 
   @Output() picketAdded = new EventEmitter<Picket>();
+  @Output() picketEdited = new EventEmitter<{picket: Picket, index: number}>();
 
   title = 'AGM project';
   currentDisplayedLatitude: number;
@@ -45,5 +46,14 @@ export class MapComponent implements OnInit {
     picket.coordinateY = event.coords.lat;
     picket.coordinateX = event.coords.lng;
     this.picketAdded.emit(picket);
+  }
+
+  onMarkerClicked(event, index: number) {
+    const picket = new Picket();
+    picket.name = event.label.text;
+    picket.picketInternalId = event.title;
+    picket.coordinateY = event.latitude;
+    picket.coordinateX = event.longitude;
+    this.picketEdited.emit({ picket, index });
   }
 }

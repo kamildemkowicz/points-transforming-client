@@ -100,11 +100,29 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  onEditPicket(event: { picketEdited: Picket, index: number }) {
+    const control = new FormGroup({
+      name: new FormControl(event.picketEdited.name, [Validators.required]),
+      coordinateX: new FormControl(event.picketEdited.coordinateX, [Validators.required]),
+      coordinateY: new FormControl(event.picketEdited.coordinateY, [Validators.required])
+    });
+
+    (this.measurementForm.get('pickets') as FormArray).setControl(event.index, control);
+
+    const copyPicketEdited = this.copyPicket.slice();
+    copyPicketEdited[event.index] = event.picketEdited;
+    this.copyPicket = copyPicketEdited.slice();
+  }
+
   onPicketAddedFromMap(event: Picket) {
     this.openAddPicketModal(event);
   }
 
-  private openAddPicketModal(picket: Picket) {
+  onPicketEditedFromMap(event: { picket: Picket, index: number }) {
+    this.openAddPicketModal(event.picket, event.index);
+  }
+
+  private openAddPicketModal(picket: Picket, index?: number) {
     const ngbModalOptions: NgbModalOptions = {
       ariaLabelledBy: 'modal-basic-title',
       centered: true
@@ -112,18 +130,27 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
 
     const modalRef = this.modalService.open(AddPicketModalComponent, ngbModalOptions);
     modalRef.componentInstance.picketFromMap = picket;
+    modalRef.componentInstance.index = index;
 
     this.picketAddedSubscription = modalRef.componentInstance.picketAdded.subscribe((picketAdded: Picket) => {
       this.onAddPicket(picketAdded, this.copyPicket);
+    });
+
+    this.picketAddedSubscription = modalRef.componentInstance.picketEdited.subscribe((event: {picketEdited: Picket, index: number }) => {
+      this.onEditPicket(event);
     });
   }
 
   onRemovePicket(index: number) {
     (this.measurementForm.get('pickets') as FormArray).removeAt(index);
+    this.copyPicket.splice(index, 1);
   }
 
   onSubmit() {
-    this.measurementsService.updateMeasurement(this.measurementForm.value).subscribe((measurementUpdated: MeasurementsModel) => {
+    const measurementFormValues = this.measurementForm.value;
+    measurementFormValues.measurementInternalId = this.measurement.measurementInternalId;
+
+    this.measurementsService.updateMeasurement(measurementFormValues).subscribe((measurementUpdated: MeasurementsModel) => {
       console.log(measurementUpdated);
     });
     this.measurementForm.reset();

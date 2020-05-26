@@ -10,8 +10,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AddPicketModalComponent implements OnInit {
   @Input() picketFromMap: Picket;
+  @Input() index: number;
 
   @Output() picketAdded = new EventEmitter<Picket>();
+  @Output() picketEdited = new EventEmitter<{ picketEdited: Picket, index: number }>();
 
   picketForm: FormGroup;
 
@@ -21,7 +23,7 @@ export class AddPicketModalComponent implements OnInit {
 
   ngOnInit() {
     this.picketForm = new FormGroup({
-      name: new FormControl(null, [Validators.required]),
+      name: new FormControl(this.picketFromMap.name, [Validators.required]),
       coordinateX: new FormControl(this.picketFromMap.coordinateX, [Validators.required]),
       coordinateY: new FormControl(this.picketFromMap.coordinateY, [Validators.required])
     });
@@ -40,7 +42,8 @@ export class AddPicketModalComponent implements OnInit {
   }
 
   onSubmit() {
-    this.picketAdded.emit(this.picketForm.value);
+    this.index !== undefined ? this.picketEdited.emit({
+        picketEdited: this.picketForm.value, index: this.index }) : this.picketAdded.emit(this.picketForm.value);
     this.activeModal.dismissAll();
   }
 }

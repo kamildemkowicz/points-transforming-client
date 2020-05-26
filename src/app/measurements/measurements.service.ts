@@ -17,7 +17,7 @@ export class MeasurementsService {
     return this.http.get<MeasurementsModel[]>(this.measurementsUrl);
   }
 
-  getMeasurement(measurementId: number): Observable<MeasurementsModel> {
+  getMeasurement(measurementId: string): Observable<MeasurementsModel> {
     return this.http.get<MeasurementsModel>(this.measurementUrl + '/' + measurementId);
   }
 
@@ -26,6 +26,6 @@ export class MeasurementsService {
   }
 
   updateMeasurement(measurement: MeasurementsModel): Observable<any> {
-    return this.http.post(this.measurementsUrl + '/' + measurement.id, measurement);
+    return this.http.post(this.measurementsUrl + '/' + measurement.measurementInternalId, measurement);
   }
 }

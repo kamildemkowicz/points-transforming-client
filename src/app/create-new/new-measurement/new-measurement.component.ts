@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Routes } from '@angular/router';
+import { Router, Routes } from '@angular/router';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MeasurementsService } from '../../measurements/measurements.service';
 import { MeasurementsModel } from '../../measurements/measurements.model';
@@ -13,7 +13,8 @@ export class NewMeasurementComponent implements OnInit {
   measurementForm: FormGroup;
 
   constructor(
-    private measurementsService: MeasurementsService
+    private measurementsService: MeasurementsService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -22,10 +23,6 @@ export class NewMeasurementComponent implements OnInit {
       place: new FormControl(null, [Validators.required]),
       owner: new FormControl(null, [Validators.required]),
       pickets: new FormArray([])
-    });
-
-    this.measurementForm.statusChanges.subscribe((value) => {
-      console.log(value);
     });
   }
 
@@ -61,7 +58,7 @@ export class NewMeasurementComponent implements OnInit {
 
   onSubmit() {
     this.measurementsService.createMeasurement(this.measurementForm.value).subscribe((measurementCreated: MeasurementsModel) => {
-      console.log(measurementCreated);
+      this.router.navigate(['measurements', measurementCreated.measurementInternalId]);
     });
     this.measurementForm.reset();
   }
