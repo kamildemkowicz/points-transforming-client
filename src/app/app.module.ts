@@ -46,7 +46,7 @@ import { AddPicketModalComponent } from './edit-measurement-form/add-picket-moda
   imports: [
     BrowserModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAVotiHjf1n6CuiRMrBDj1CYolLkWq9WAg',
+      apiKey: 'apiKey',
       libraries: ['places']
     }),
     AppRoutingModule,
