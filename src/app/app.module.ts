@@ -50,7 +50,7 @@ import { HistorySearchResultsComponent } from './history/history-search/history-
   imports: [
     BrowserModule,
     AgmCoreModule.forRoot({
-      apiKey: 'apiKey',
+      apiKey: 'AIzaSyAVotiHjf1n6CuiRMrBDj1CYolLkWq9WAg',
       libraries: ['places']
     }),
     AppRoutingModule,

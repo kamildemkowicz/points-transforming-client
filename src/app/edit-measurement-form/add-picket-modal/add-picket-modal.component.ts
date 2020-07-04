@@ -25,7 +25,8 @@ export class AddPicketModalComponent implements OnInit {
     this.picketForm = new FormGroup({
       name: new FormControl(this.picketFromMap.name, [Validators.required]),
       coordinateX: new FormControl(this.picketFromMap.coordinateX, [Validators.required]),
-      coordinateY: new FormControl(this.picketFromMap.coordinateY, [Validators.required])
+      coordinateY: new FormControl(this.picketFromMap.coordinateY, [Validators.required]),
+      picketInternalId: new FormControl(this.picketFromMap.picketInternalId)
     });
   }
 

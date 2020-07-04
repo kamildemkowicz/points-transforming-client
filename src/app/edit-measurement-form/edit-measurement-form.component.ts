@@ -80,7 +80,8 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     const control = new FormGroup({
       name: new FormControl(null, [Validators.required]),
       coordinateX: new FormControl(null, [Validators.required]),
-      coordinateY: new FormControl(null, [Validators.required])
+      coordinateY: new FormControl(null, [Validators.required]),
+      picketInternalId: new FormControl(null)
     });
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
@@ -90,7 +91,8 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     const control = new FormGroup({
       name: new FormControl(picket.name, [Validators.required]),
       coordinateX: new FormControl(picket.coordinateX, [Validators.required]),
-      coordinateY: new FormControl(picket.coordinateY, [Validators.required])
+      coordinateY: new FormControl(picket.coordinateY, [Validators.required]),
+      picketInternalId: new FormControl(picket.picketInternalId)
     });
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
@@ -104,7 +106,8 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     const control = new FormGroup({
       name: new FormControl(event.picketEdited.name, [Validators.required]),
       coordinateX: new FormControl(event.picketEdited.coordinateX, [Validators.required]),
-      coordinateY: new FormControl(event.picketEdited.coordinateY, [Validators.required])
+      coordinateY: new FormControl(event.picketEdited.coordinateY, [Validators.required]),
+      picketInternalId: new FormControl(event.picketEdited.picketInternalId, [Validators.required])
     });
 
     (this.measurementForm.get('pickets') as FormArray).setControl(event.index, control);
