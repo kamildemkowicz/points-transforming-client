@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent, dashboardProviders } from './dashboard/dashboard.component';
@@ -26,6 +27,7 @@ import { HistoryComponent } from './history/history.component';
 import { AddPicketModalComponent } from './edit-measurement-form/add-picket-modal/add-picket-modal.component';
 import { HistorySearchComponent } from './history/history-search/history-search.component';
 import { HistorySearchResultsComponent } from './history/history-search/history-search-results/history-search-results.component';
+import { HistoryService } from './history/history.service';
 
 @NgModule({
   declarations: [
@@ -58,13 +60,15 @@ import { HistorySearchResultsComponent } from './history/history-search/history-
     NgbModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FormsModule
   ],
   providers: [
     MeasurementsService,
     measurementsProviders,
     measurementProviders,
-    dashboardProviders
+    dashboardProviders,
+    HistoryService
   ],
   bootstrap: [AppComponent],
   entryComponents: [

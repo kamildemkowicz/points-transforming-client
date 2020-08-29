@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { HistoryChanges } from '../../models/history-changes.model';
 
 @Component({
   selector: 'app-history-search-results',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./history-search-results.component.scss']
 })
 export class HistorySearchResultsComponent implements OnInit {
+  @Input() historyChanges: HistoryChanges;
 
   constructor() { }
 
