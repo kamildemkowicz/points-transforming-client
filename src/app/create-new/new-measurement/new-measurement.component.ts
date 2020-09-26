@@ -56,6 +56,10 @@ export class NewMeasurementComponent implements OnInit {
     (this.measurementForm.get('pickets') as FormArray).removeAt(index);
   }
 
+  uploadFile(event) {
+    const file = (event.target as HTMLInputElement).files[0];
+  }
+
   onSubmit() {
     this.measurementsService.createMeasurement(this.measurementForm.value).subscribe((measurementCreated: MeasurementsModel) => {
       this.router.navigate(['measurements', measurementCreated.measurementInternalId]);

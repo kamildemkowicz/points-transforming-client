@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { MeasurementsModel } from '../../measurements.model';
+import { Picket } from '../../pickets/picket.model';
 
 @Component({
   selector: 'app-details',
@@ -8,10 +9,15 @@ import { MeasurementsModel } from '../../measurements.model';
 })
 export class DetailsComponent implements OnInit {
   @Input() measurement: MeasurementsModel;
+  @Output() picketChanged = new EventEmitter<Picket>();
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onPicketChanged(picket: Picket) {
+    this.picketChanged.emit(picket);
   }
 
 }

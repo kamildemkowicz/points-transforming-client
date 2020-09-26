@@ -3,6 +3,6 @@ import { HistorySimpleChange } from './history-simple-change.model';
 
 export class HistoryPicketChange {
   picket: Picket;
-  picketChanges: HistorySimpleChange[];
+  picketSimpleChanges: HistorySimpleChange[];
   type: string;
 }

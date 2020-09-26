@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Picket } from './picket.model';
 
 @Component({
@@ -8,10 +8,14 @@ import { Picket } from './picket.model';
 })
 export class PicketsComponent implements OnInit {
   @Input() pickets: Picket[];
+  @Output() picketChanged = new EventEmitter<Picket>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  onPicketChanged(picket: Picket) {
+    this.picketChanged.emit(picket);
+  }
 }

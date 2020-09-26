@@ -11,13 +11,14 @@ export class MapComponent implements OnInit {
   @Input() widthMap = '700px';
   @Input() pickets: Picket[];
   @Input() disableDoubleClickZoom = false;
+  @Input() currentDisplayedLatitude: number;
+  @Input() currentDisplayedLongitude: number;
 
   @Output() picketAdded = new EventEmitter<Picket>();
   @Output() picketEdited = new EventEmitter<{picket: Picket, index: number}>();
 
   title = 'AGM project';
-  currentDisplayedLatitude: number;
-  currentDisplayedLongitude: number;
+
   zoom: number;
   iconUrl = '../../../../assets/images/point.png';
 

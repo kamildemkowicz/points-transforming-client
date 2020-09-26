@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HistoryService } from '../history.service';
-import { HistoryChanges } from '../models/history-changes.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-history-search',
@@ -9,19 +9,17 @@ import { HistoryChanges } from '../models/history-changes.model';
 })
 export class HistorySearchComponent implements OnInit {
   measurementId: string;
-  historyChanges: HistoryChanges;
 
   constructor(
-    private historyService: HistoryService
+    private historyService: HistoryService,
+    private router: Router
   ) { }
 
   ngOnInit() {
   }
 
   searchHistory(measurementId: string) {
-    this.historyService.getMeasurementHistory(measurementId).subscribe((historyChanges: HistoryChanges) => {
-      this.historyChanges = historyChanges;
-    });
+    this.router.navigate(['history', measurementId]);
   }
 
 }

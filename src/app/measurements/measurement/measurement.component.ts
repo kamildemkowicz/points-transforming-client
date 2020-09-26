@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Routes } from '@angular/router';
 import { MeasurementResolverService } from './measurement-resolver.service';
 import { MeasurementsModel } from '../measurements.model';
+import { Picket } from '../pickets/picket.model';
 
 @Component({
   selector: 'app-measurement',
@@ -10,6 +11,8 @@ import { MeasurementsModel } from '../measurements.model';
 })
 export class MeasurementComponent implements OnInit {
   measurement: MeasurementsModel;
+  currentDisplayedLatitude: number;
+  currentDisplayedLongitude: number;
 
   constructor(
     private route: ActivatedRoute
@@ -19,7 +22,16 @@ export class MeasurementComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe((resolve) => {
       this.measurement = resolve.measurement;
+      if (this.measurement && this.measurement.pickets && this.measurement.pickets.length) {
+        this.currentDisplayedLongitude = this.measurement.pickets[0].coordinateX;
+        this.currentDisplayedLatitude = this.measurement.pickets[0].coordinateY;
+      }
     });
+  }
+
+  onPicketChanged(picket: Picket) {
+    this.currentDisplayedLongitude = picket.coordinateX;
+    this.currentDisplayedLatitude = picket.coordinateY;
   }
 }
 

@@ -1,20 +1,21 @@
-
-  <table class="table table-hover">
-    <thead>
-    <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Name</th>
-      <th scope="col">Coordinate X</th>
-      <th scope="col">Coordinate Y</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let picket of pickets; let i = index;">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{ picket.name }}</td>
-      <td>{{ picket.coordinateX }}</td>
-      <td>{{ picket.coordinateY }}</td>
-    </tr>
-    </tbody>
-  </table>
-
+<table class="table table-hover">
+  <thead class="table-head">
+  <tr>
+    <th scope="col">Id</th>
+    <th scope="col">Name</th>
+    <th scope="col">Coordinate X</th>
+    <th scope="col">Coordinate Y</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let picket of pickets; let i = index;"
+      (click)="onPicketTableClicked(picket)"
+      [ngClass]="{'selected-picket': picket === selectedPicket}"
+  >
+    <th scope="row">{{ i + 1 }}</th>
+    <td>{{ picket.name }}</td>
+    <td>{{ picket.coordinateX }}</td>
+    <td>{{ picket.coordinateY }}</td>
+  </tr>
+  </tbody>
+</table>

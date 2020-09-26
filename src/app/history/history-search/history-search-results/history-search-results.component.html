@@ -1,14 +1,50 @@
-<div class="d-flex flex-column w-100 px-5">
+<div class="d-flex flex-column w-100 px-5" *ngIf="historyChanges && historyChanges.changes">
   <div class="d-flex flex-row w-100 header pb-2">
-    <div class="w-25"><strong>Item ID</strong></div>
+    <div class="w-25"><strong>Label</strong></div>
     <div class="w-25"><strong>Old value</strong></div>
     <div class="w-25"><strong>New value</strong></div>
-    <div class="w-25"><strong>Date</strong></div>
+    <div class="w-25"><strong>Type</strong></div>
   </div>
-  <div class="d-flex flex-row" *ngFor="let historyChange of historyChanges.changes">
-    <div class="w-25"><i>{{ historyChange.dateTime | date:'medium' }}</i></div>
-    <div class="w-25">Old value</div>
-    <div class="w-25">New value</div>
-    <div class="w-25"><i>{{ historyChange.dateTime | date:'medium' }}</i></div>
+  <div class="overflow-auto history-results-overflow">
+    <div class="d-flex flex-column w-100 main-separator py-2" *ngFor="let historyChange of historyChanges.changes">
+      <div class="d-flex flex-column w-100">
+        <div class="d-flex flex-column w-100 measurement-separator">
+          <div class="d-flex flex-row w-100 justify-content-start changes-label">
+            <em class="mr-2">Changes made at:</em>
+            <em><strong>{{ historyChange.dateTime | date:'medium' }}</strong></em>
+          </div>
+          <div class="d-flex flex-column w-100" *ngFor="let measurementChange of historyChange.measurementChanges">
+            <div class="d-flex flex-row w-100 py-1">
+              <div class="w-25">{{ measurementChange.label }}</div>
+              <div class="w-25">{{ measurementChange.oldValue }}</div>
+              <div class="w-25"><em><strong>{{ measurementChange.newValue }}</strong></em></div>
+              <div class="w-25 fas fa-sync-alt"></div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-row w-100 changes-label pt-2">
+          <em>Pickets:</em>
+        </div>
+        <div *ngIf="!historyChange.picketChanges.length">No picket changed.</div>
+        <div class="d-flex flex-column w-100 pt-2" *ngFor="let picketChange of historyChange.picketChanges">
+          <div class="d-flex flex-row w-100">
+            <div class="w-25">Picket: <em><strong>{{picketChange.picket.picketInternalId}}</strong></em></div>
+            <div class="w-50"></div>
+            <div class="w-25">
+              <em *ngIf="picketChange.type === 'ADD'" class="fas fa-plus-square"></em>
+              <em *ngIf="picketChange.type === 'REMOVE'" class="fas fa-minus-circle"></em>
+              <em *ngIf="picketChange.type === 'CHANGED_VALUE'" class="fas fa-sync-alt"></em>
+            </div>
+          </div>
+          <div class="d-flex flex-column w-100" *ngFor="let picketPropertiesChange of picketChange.picketSimpleChanges">
+            <div class="d-flex flex-row w-100 py-1">
+              <div class="w-25">{{ picketPropertiesChange.label }}</div>
+              <div class="w-25">{{ picketPropertiesChange.oldValue }}</div>
+              <div class="w-25">{{ picketPropertiesChange.newValue }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

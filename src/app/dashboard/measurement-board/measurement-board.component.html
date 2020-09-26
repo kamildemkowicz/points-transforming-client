@@ -6,7 +6,7 @@
     (click)="$event.stopPropagation();"
   >
   </app-map>
-  <h4 class="pt-2 pl-1">{{ measurement.name }}: </h4>
+  <h4 class="pt-2 pl-1">{{ measurement.name }} ({{ measurement.measurementInternalId }}): </h4>
   <div class="d-flex flex-row py-2 pl-1">
     <div class="d-flex label-text mr-2">
       Place:
@@ -32,6 +32,8 @@
         <i>{{ measurement.creationDate | date:'medium' }}</i>
       </div>
     </div>
-    <button class="btn btn-primary" [routerLink]="['/history']">See editing stories</button>
+    <button class="btn btn-primary" [routerLink]="['/history', measurement.measurementInternalId]" (click)="$event.stopPropagation();">
+      See editing stories
+    </button>
   </div>
 </div>

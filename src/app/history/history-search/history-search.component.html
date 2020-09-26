@@ -7,7 +7,5 @@
     #measurementIdValue="ngModel"
     required
   >
-  <button class="btn btn-primary" (click)="searchHistory(measurementId)">Find</button>
-  <button class="btn btn-primary mx-2">Show all</button>
+  <button class="btn btn-primary find-button" (click)="searchHistory(measurementId)">Find</button>
 </div>
-<app-history-search-results [historyChanges]="historyChanges"></app-history-search-results>

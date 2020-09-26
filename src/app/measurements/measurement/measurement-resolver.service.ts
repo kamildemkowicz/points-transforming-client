@@ -7,8 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class MeasurementResolverService implements Resolve<MeasurementsModel> {
   constructor(
-    private measurementsService: MeasurementsService,
-    private router: Router
+    private measurementsService: MeasurementsService
   ) {
   }
 

@@ -2,5 +2,21 @@
 
 .header {
   font-size: 18px;
+  border-bottom: solid 1px $grayscale-3;
+}
+
+.main-separator {
+  border-bottom: solid 1px $grayscale-2;
+}
+
+.measurement-separator {
   border-bottom: solid 1px $grayscale-4;
+}
+
+.changes-label {
+  font-size: 19px;
+}
+
+.history-results-overflow {
+  max-height: 60vh;
 }

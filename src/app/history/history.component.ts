@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Routes } from '@angular/router';
+import { historyResultRoutes } from './history-search/history-search-results/history-search-results.component';
 
 @Component({
   selector: 'app-history',
@@ -18,6 +19,9 @@ export class HistoryComponent implements OnInit {
 export const historyRoutes: Routes = [
   {
     path: 'history',
-    component: HistoryComponent
+    component: HistoryComponent,
+    children: [
+      ...historyResultRoutes
+    ]
   }
 ];

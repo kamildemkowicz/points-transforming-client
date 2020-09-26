@@ -115,7 +115,12 @@
           </button>
 
           <div class="form-group d-flex flex-row mb-0 pt-1">
-            <input type="file" class="form-control-file w-100" id="exampleFormControlFile1">
+            <input
+              type="file"
+              (change)="uploadFile($event)"
+              class="form-control-file w-100"
+              id="exampleFormControlFile1"
+            >
           </div>
         </div>
       </div>
