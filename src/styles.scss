@@ -1,6 +1,14 @@
 @import "~bootstrap/scss/bootstrap";
 @import "assets/css/colors";
 
+@import '~ngx-toastr/toastr';
+@import '~ngx-toastr/toastr-bs4-alert';
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~ngx-toastr/toastr-bs4-alert';
+
 body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;

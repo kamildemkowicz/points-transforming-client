@@ -31,6 +31,7 @@ import {
   HistorySearchResultsComponent
 } from './history/history-search/history-search-results/history-search-results.component';
 import { HistoryService } from './history/history.service';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { HistoryService } from './history/history.service';
     HttpClientModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
-    FormsModule
+    FormsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     MeasurementsService,

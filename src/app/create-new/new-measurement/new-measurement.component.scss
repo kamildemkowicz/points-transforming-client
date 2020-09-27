@@ -5,3 +5,10 @@ input.ng-invalid.ng-touched {
 .pickets-table-form {
   height: 80vh;
 }
+
+.tooltip-body .tooltip-inner {
+  background-color: #0099ff;
+}
+.tooltip-body .arrow::before {
+  border-top-color: deepskyblue;
+}

@@ -1,6 +1,6 @@
 <div class="p-4">
   <h3 class="pb-3">Create new measurement</h3>
-  <form [formGroup]="measurementForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="measurementForm">
     <div class="d-flex flex-row">
       <div class="d-flex flex-column w-100 mr-3">
         <div class="form-group">
@@ -56,11 +56,28 @@
         </div>
         <button
           class="btn btn-primary w-25"
-          type="submit"
+          (click)="onSubmit()"
           [disabled]="measurementForm.invalid || measurementForm.untouched"
         >
           Create measurement
         </button>
+        <div class="form-group d-flex flex-column mb-2 pt-2">
+          <input
+            type="file"
+            style="display: none"
+            #attachments
+            (change)="uploadFile($event)"
+            class="form-control-file w-100"
+            #fileInput
+            multiple="true"
+          >
+          <div *ngFor="let selected of listOfFiles; let index = index" class="d-flex flex-row">
+            <div class="mr-1"><strong><em>{{selected}}</em></strong></div>
+            <div (click)="removeSelectedFile(index)">
+              <em class="fas fa-trash-alt"></em>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="d-flex flex-column w-100 pickets-table-form">
         <label class="mb-2">Pickets:</label>
@@ -113,15 +130,25 @@
           >
             Add picket
           </button>
-
-          <div class="form-group d-flex flex-row mb-0 pt-1">
-            <input
-              type="file"
-              (change)="uploadFile($event)"
-              class="form-control-file w-100"
-              id="exampleFormControlFile1"
-            >
-          </div>
+          <button
+            class="btn btn-primary mr-2 w-25"
+            type="button"
+            (click)="fileInput.click()">
+            Upload pickets
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary mr-2"
+            placement="right"
+            ngbTooltip="The first column is supposed to have picket name, the second - value of coordinate X and
+             the third one - value of coordinate Y. Each picket should be placed in separate line and each
+              column should have one space break beetwen each other. Example:
+              picket1 34.32222 67.444344\n
+              picket2 33.32272 83.4446344\n"
+            tooltipClass="tooltip-body"
+          >
+            ?
+          </button>
         </div>
       </div>
     </div>
