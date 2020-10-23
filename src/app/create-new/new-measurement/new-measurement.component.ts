@@ -1,10 +1,12 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import { Router, Routes } from '@angular/router';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router, Routes } from '@angular/router';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MeasurementsService } from '../../measurements/measurements.service';
 import { MeasurementsModel } from '../../measurements/measurements.model';
 import { Picket } from '../../measurements/pickets/picket.model';
 import { ToastrService } from 'ngx-toastr';
+import { DistrictResolverService } from '../../measurements/district/district-resolver.service';
+import { District } from '../../measurements/district/district.model';
 
 @Component({
   selector: 'app-new-measurement',
@@ -17,7 +19,8 @@ export class NewMeasurementComponent implements OnInit {
   constructor(
     private measurementsService: MeasurementsService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private route: ActivatedRoute
   ) { }
 
   get name() {
@@ -32,6 +35,10 @@ export class NewMeasurementComponent implements OnInit {
     return this.measurementForm.get('place');
   }
 
+  get district() {
+    return this.measurementForm.get('district');
+  }
+
   get pickets() {
     return (this.measurementForm.get('pickets') as FormArray).controls;
   }
@@ -42,6 +49,8 @@ export class NewMeasurementComponent implements OnInit {
   fileList: File[] = [];
   listOfFiles: any[] = [];
   fileToPicketIndexes = {};
+  districts: District[] = [];
+  selectedDistrict: District;
 
   private static validateSingleLine(line: any): boolean {
     const splittedLine = line.split(' ');
@@ -57,19 +66,31 @@ export class NewMeasurementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.measurementForm = new FormGroup({
-      name: new FormControl(null, [Validators.required]),
-      place: new FormControl(null, [Validators.required]),
-      owner: new FormControl(null, [Validators.required]),
-      pickets: new FormArray([])
+    this.route.data.subscribe((resolve) => {
+      this.districts = resolve.districts;
+      this.selectedDistrict = this.districts[0];
+
+      this.measurementForm = new FormGroup({
+        name: new FormControl(null, [Validators.required]),
+        place: new FormControl(null, [Validators.required]),
+        owner: new FormControl(null, [Validators.required]),
+        districtId: new FormControl(null, [Validators.required]),
+        pickets: new FormArray([])
+      });
+
+      if (this.districts) {
+        this.measurementForm.patchValue({
+          districts: this.districts[0].id,
+        });
+      }
     });
   }
 
   onAddPicket() {
     const control = new FormGroup({
       name: new FormControl(null, [Validators.required]),
-      coordinateX: new FormControl(null, [Validators.required]),
-      coordinateY: new FormControl(null, [Validators.required])
+      coordinateX2000: new FormControl(null, [Validators.required]),
+      coordinateY2000: new FormControl(null, [Validators.required])
     });
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
@@ -77,6 +98,19 @@ export class NewMeasurementComponent implements OnInit {
 
   onRemovePicket(index: number) {
     (this.measurementForm.get('pickets') as FormArray).removeAt(index);
+  }
+
+  onChangeDistrict(district: District) {
+    this.measurementForm.patchValue({ districtId: district.id });
+    this.selectedDistrict = district;
+  }
+
+  getDistrict(): string {
+    if (this.selectedDistrict) {
+      return this.selectedDistrict.name;
+    }
+
+    return '';
   }
 
   uploadFile(event) {
@@ -150,16 +184,16 @@ export class NewMeasurementComponent implements OnInit {
   private addNewPicketFromTxtFile(picket: string[]): void {
     const newPicket = new Picket();
     newPicket.name = picket[0];
-    newPicket.coordinateX = picket[1] as any;
-    newPicket.coordinateY = picket[2] as any;
+    newPicket.coordinateX2000 = picket[1] as any;
+    newPicket.coordinateY2000 = picket[2] as any;
     this.onAddPicketFromTxt(newPicket);
   }
 
   private onAddPicketFromTxt(picket: Picket) {
     const control = new FormGroup({
       name: new FormControl(picket.name, [Validators.required]),
-      coordinateX: new FormControl(picket.coordinateX, [Validators.required]),
-      coordinateY: new FormControl(picket.coordinateY, [Validators.required])
+      coordinateX2000: new FormControl(picket.coordinateX2000, [Validators.required]),
+      coordinateY2000: new FormControl(picket.coordinateY2000, [Validators.required])
     });
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
@@ -169,6 +203,13 @@ export class NewMeasurementComponent implements OnInit {
 export const createNewMeasurementRoutes: Routes = [
   {
     path: 'create-new',
-    component: NewMeasurementComponent
+    component: NewMeasurementComponent,
+    resolve: {
+      districts: DistrictResolverService
+    }
   }
+];
+
+export const districtsProvider = [
+  DistrictResolverService
 ];

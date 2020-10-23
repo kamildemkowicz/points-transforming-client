@@ -18,10 +18,13 @@ import { DetailsComponent } from './measurements/measurement/details/details.com
 import { MapComponent } from './measurements/measurement/map/map.component';
 import { PicketsTableComponent } from './measurements/pickets/pickets-table/pickets-table.component';
 import { PicketsComponent } from './measurements/pickets/pickets.component';
-import { NewMeasurementComponent } from './create-new/new-measurement/new-measurement.component';
+import { districtsProvider, NewMeasurementComponent } from './create-new/new-measurement/new-measurement.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MeasurementBoardComponent } from './dashboard/measurement-board/measurement-board.component';
-import { EditMeasurementFormComponent } from './edit-measurement-form/edit-measurement-form.component';
+import {
+  EditMeasurementFormComponent,
+  editMeasurementProviders
+} from './edit-measurement-form/edit-measurement-form.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HistoryComponent } from './history/history.component';
 import { AddPicketModalComponent } from './edit-measurement-form/add-picket-modal/add-picket-modal.component';
@@ -32,6 +35,14 @@ import {
 } from './history/history-search/history-search-results/history-search-results.component';
 import { HistoryService } from './history/history.service';
 import { ToastrModule } from 'ngx-toastr';
+import { TachymetryComponent } from './tachymetry/tachymetry.component';
+import { TachymetryFormComponent } from './tachymetry/tachymetry-form/tachymetry-form.component';
+import {
+  AddMeasuringStationModalComponent
+} from './tachymetry/tachymetry-form/add-measuring-station-modal/add-measuring-station-modal.component';
+import { TachymetryService } from './tachymetry/tachymetry.service';
+import { DistrictService } from './measurements/district/district.service';
+import { TachymetryReportComponent } from './tachymetry/tachymetry-form/tachymetry-report/tachymetry-report.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +62,11 @@ import { ToastrModule } from 'ngx-toastr';
     HistoryComponent,
     AddPicketModalComponent,
     HistorySearchComponent,
-    HistorySearchResultsComponent
+    HistorySearchResultsComponent,
+    TachymetryComponent,
+    TachymetryFormComponent,
+    AddMeasuringStationModalComponent,
+    TachymetryReportComponent
   ],
   imports: [
     BrowserModule,
@@ -73,12 +88,17 @@ import { ToastrModule } from 'ngx-toastr';
     measurementsProviders,
     measurementProviders,
     dashboardProviders,
+    editMeasurementProviders,
     HistoryService,
-    historyResultProviders
+    historyResultProviders,
+    TachymetryService,
+    DistrictService,
+    districtsProvider
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    AddPicketModalComponent
+    AddPicketModalComponent,
+    AddMeasuringStationModalComponent
   ]
 })
 export class AppModule { }

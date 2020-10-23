@@ -1,0 +1,12 @@
+<div class="d-flex flex-row p-5 m-5">
+  <h3 class="mr-2">Add tachymetry for measurement: </h3>
+  <input
+    class="form-control w-50 mx-2"
+    placeholder="Measurement ID, example: MES-1"
+    [(ngModel)]="measurementId"
+    #measurementIdValue="ngModel"
+    required
+  >
+  <button class="btn btn-primary open-button" (click)="openTachymetryForm(measurementId)">Open form</button>
+</div>
+<router-outlet></router-outlet>

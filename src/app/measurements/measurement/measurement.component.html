@@ -1,6 +1,13 @@
 <div class="d-flex flex-row w-100 px-2 pt-4">
   <div class="d-flex w-100 mr-5">
-    <app-details class="w-100" [measurement]="measurement" (picketChanged)="onPicketChanged($event)"></app-details>
+    <app-details
+      class="w-100"
+      [measurement]="measurement"
+      [offTachymetry]=""
+      (picketChanged)="onPicketChanged($event)"
+      (showTachymetry)="onShowTachymetry($event)"
+    >
+    </app-details>
   </div>
   <div class="d-flex w-100">
     <app-map
@@ -8,6 +15,8 @@
       [pickets]="measurement.pickets"
       [currentDisplayedLatitude]="currentDisplayedLatitude"
       [currentDisplayedLongitude]="currentDisplayedLongitude"
+      [zoom]="zoom"
+      [pathsList]="pathsList"
     >
     </app-map>
   </div>

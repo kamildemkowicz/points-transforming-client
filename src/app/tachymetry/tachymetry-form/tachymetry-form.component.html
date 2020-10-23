@@ -1,0 +1,162 @@
+<div class="p-4">
+  <h3 class="pb-3">Tachymetry for {{measurementId}}</h3>
+  <form [formGroup]="tachymetryForm">
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-column w-25 mr-4">
+        <div class="form-group" formGroupName="tachymetryMetaData">
+          <div class="form-group">
+            <label class="mb-3" for="tachymetryName">Tachymetry name:</label>
+            <input
+              type="text"
+              class="form-control w-100"
+              id="tachymetryName"
+              aria-describedby="tachymetryNameHelp"
+              placeholder="Enter tachymetry name"
+              formControlName="tachymetryName"
+            >
+            <span *ngIf="!tachymetryName.valid && tachymetryName.touched" class="help-block">
+              <span *ngIf="tachymetryName.errors['required']" class="error-message mt-1">
+                The tachymetry name is required.
+              </span>
+            </span>
+            <small *ngIf="!tachymetryName.touched" id="tachymetryNameHelp" class="form-text text-muted">
+              Enter the name of the tachymetry.
+            </small>
+          </div>
+          <div class="form-group">
+            <label for="tachymetrType">Tachymetr type:</label>
+            <input
+              type="text"
+              class="form-control w-100"
+              id="tachymetrType"
+              placeholder="Enter tachymetr type"
+              formControlName="tachymetrType"
+            >
+            <span *ngIf="!tachymetrType.valid && tachymetrType.touched" class="help-block">
+              <span *ngIf="tachymetrType.errors['required']" class="error-message mt-1">
+                The tachymetr type is required!
+              </span>
+            </span>
+          </div>
+          <div class="form-group">
+            <label for="temperature">Temperature:</label>
+            <input
+              type="number"
+              class="form-control w-100"
+              id="temperature"
+              placeholder="Enter temperature"
+              aria-describedby="temperatureHelp"
+              formControlName="temperature"
+            >
+            <span *ngIf="!temperature.valid && temperature.touched" class="help-block">
+              <span *ngIf="temperature.errors['required']" class="error-message mt-1">
+                The tachymetry temperature is required!
+              </span>
+            </span>
+            <small *ngIf="!temperature.touched" id="temperatureHelp" class="form-text text-muted">
+              Enter the temperature in degrees Celsius.
+            </small>
+          </div>
+          <div class="form-group">
+            <label for="pressure">Pressure:</label>
+            <input
+              type="number"
+              class="form-control w-100"
+              id="pressure"
+              placeholder="Enter pressure"
+              aria-describedby="pressureHelp"
+              formControlName="pressure"
+            >
+            <span *ngIf="!pressure.valid && pressure.touched" class="help-block">
+              <span *ngIf="pressure.errors['required']" class="error-message mt-1">
+                The tachymetry pressure is required!
+              </span>
+            </span>
+            <small *ngIf="!pressure.touched" id="pressureHelp" class="form-text text-muted">
+              Enter the pressure in hectopascals.
+            </small>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary w-100"
+          (click)="onSubmit()"
+          [disabled]="tachymetryForm.invalid || tachymetryForm.untouched"
+        >
+          Create tachymetry
+        </button>
+      </div>
+      <div class="d-flex flex-column w-50 pickets-table-form mr-1">
+        <label class="mb-2">Measuring stations:</label>
+        <div formArrayName="measuringStations" class="mb-2 overflow-auto">
+          <div
+            class="form-group"
+            *ngFor="let measuringStationControl of measuringStations; let i = index"
+            (click)="openEditMeasuringStation(measuringStationControl.value, i)"
+          >
+            <div class="d-flex flex-row" [formGroup]="measuringStationControl">
+              <button class="btn btn-primary mr-3">
+                {{measuringStationControl.get('stationName').value}}
+              </button>
+              <button
+                type="button"
+                (click)="onRemoveMeasuringStation(i)"
+                class="close h-100 pt-2 pr-2"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-row">
+          <button
+            class="btn btn-primary mr-2 w-25"
+            type="button"
+            (click)="openEditMeasuringStation()"
+          >
+            Add measuring station
+          </button>
+          <button
+            class="btn btn-primary mr-2 w-25"
+            type="button"
+            (click)="fileInput.click()">
+            Upload measuring stations
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary mr-2"
+            placement="right"
+            ngbTooltip="Only supported file type is txt. The first column is supposed to have picket name, the second - value of coordinate X and
+             the third one - value of coordinate Y. Each picket should be placed in separate line and each
+              column should have one space break beetwen each other. Example:
+              picket1 34.32222 67.444344\n
+              picket2 33.32272 83.4446344\n"
+            tooltipClass="tooltip-body"
+          >
+            ?
+          </button>
+        </div>
+      </div>
+      <div class="form-group d-flex flex-column mb-2 w-25">
+        <input
+          type="file"
+          style="display: none"
+          #attachments
+          (change)="uploadFile($event)"
+          class="form-control-file w-100"
+          #fileInput
+          multiple="true"
+        >
+        <div *ngFor="let selected of listOfFiles; let index = index" class="d-flex flex-row">
+          <div class="mr-1"><strong><em>{{selected}}</em></strong></div>
+          <div (click)="removeSelectedFile(index)">
+            <em class="fas fa-trash-alt"></em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div *ngIf="tachymetryReport">
+    <app-tachymetry-report [tachymetryReport]="tachymetryReport"></app-tachymetry-report>
+  </div>
+</div>

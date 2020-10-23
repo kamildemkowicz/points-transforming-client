@@ -1,0 +1,202 @@
+<div class="modal-content">
+  <form [formGroup]="measuringStationForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Create new measuring station</h5>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="activeModal.dismissAll('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <div class="d-flex flex-column w-100 mr-3 measuring-station-form overflow-auto">
+        <div class="form-group">
+          <label for="stationNumber">Station number:</label>
+          <input
+            type="number"
+            class="form-control w-75"
+            id="stationNumber"
+            placeholder="Enter station number"
+            formControlName="stationNumber"
+          >
+          <span *ngIf="!stationNumber.valid && stationNumber.touched" class="help-block">
+            <span *ngIf="stationNumber.errors['required']" class="error-message mt-1">
+              The station number is required!
+            </span>
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="stationName">Station name:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="stationName"
+            placeholder="Enter station name"
+            formControlName="stationName"
+          >
+          <span *ngIf="!stationName.valid && stationName.touched" class="help-block">
+            <span *ngIf="stationName.errors['required']" class="error-message mt-1">
+              The station name is required!
+            </span>
+          </span>
+        </div>
+        <div class="pb-2">Geodetic network control starting point: </div>
+        <div class="form-group d-flex flex-row" formGroupName="startingPoint">
+          <div class="form-group w-25">
+            <input
+              type="text"
+              class="form-control w-75"
+              id="startingPointName"
+              placeholder="Enter name"
+              formControlName="name"
+            >
+            <span *ngIf="!startingPointName.valid && startingPointName.touched" class="help-block">
+              <span *ngIf="startingPointName.errors['required']" class="error-message mt-1">
+                The starting point name is required!
+              </span>
+            </span>
+          </div>
+          <div class="form-group w-25">
+            <input
+              type="number"
+              class="form-control w-75"
+              id="startingPointCoordinateX"
+              placeholder="Enter coordinate X"
+              formControlName="coordinateX"
+            >
+            <span *ngIf="!startingPointCoordinateX.valid && startingPointCoordinateX.touched" class="help-block">
+              <span *ngIf="startingPointCoordinateX.errors['required']" class="error-message mt-1">
+                Coordinate X is required!
+              </span>
+            </span>
+          </div>
+          <div class="form-group w-25">
+            <input
+              type="number"
+              class="form-control w-75"
+              id="startingPointCoordinateY"
+              placeholder="Enter coordinate Y"
+              formControlName="coordinateY"
+            >
+            <span *ngIf="!startingPointCoordinateY.valid && startingPointCoordinateY.touched" class="help-block">
+              <span *ngIf="startingPointCoordinateY.errors['required']" class="error-message mt-1">
+                Coordinate Y is required!
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="pb-2">Geodetic network control endpoint: </div>
+        <div class="form-group d-flex flex-row" formGroupName="endPoint">
+          <div class="form-group w-25">
+            <input
+              type="text"
+              class="form-control w-75"
+              id="endPointName"
+              placeholder="Enter name"
+              formControlName="name"
+            >
+            <span *ngIf="!endPointName.valid && endPointName.touched" class="help-block">
+              <span *ngIf="endPointName.errors['required']" class="error-message mt-1">
+                The end point name is required!
+              </span>
+            </span>
+          </div>
+          <div class="form-group w-25">
+            <input
+              type="number"
+              class="form-control w-75"
+              id="endPointCoordinateX"
+              placeholder="Enter coordinate X"
+              formControlName="coordinateX"
+            >
+            <span *ngIf="!endPointCoordinateX.valid && endPointCoordinateX.touched" class="help-block">
+              <span *ngIf="endPointCoordinateX.errors['required']" class="error-message mt-1">
+                Coordinate X is required!
+              </span>
+            </span>
+          </div>
+          <div class="form-group w-25">
+            <input
+              type="number"
+              class="form-control w-75"
+              id="endPointCoordinateY"
+              placeholder="Enter coordinate Y"
+              formControlName="coordinateY"
+            >
+            <span *ngIf="!endPointCoordinateY.valid && endPointCoordinateY.touched" class="help-block">
+              <span *ngIf="endPointCoordinateY.errors['required']" class="error-message mt-1">
+                Coordinate Y is required!
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Pickets measurement data:</label>
+          <div formArrayName="picketsMeasurementData">
+            <div
+              class="form-group"
+              *ngFor="let picketMeasurementData of picketsMeasurementData; let i = index"
+            >
+              <div class="d-flex flex-row" [formGroup]="picketMeasurementData">
+                <div class="form-group w-100 mr-2">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter picket name"
+                    formControlName="picketName"
+                  >
+                </div>
+                <div class="form-group w-75 mr-2">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Enter distance [meter]"
+                    formControlName="distance"
+                  >
+                </div>
+                <div class="form-group w-75 mr-2">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Enter angle [grad]"
+                    formControlName="angle"
+                  >
+                </div>
+                <button
+                  type="button"
+                  (click)="onRemovePicket(i)"
+                  class="close h-100 pt-2 pr-2"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary w-25 align-items-start" (click)="onAddPicketMeasurementData()">
+        Add picket measurement data
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="activeModal.dismissAll('Button click')"
+      >
+        Close
+      </button>
+      <button
+        (click)="onSubmit()"
+        class="btn btn-primary"
+        [disabled]="measuringStationForm.invalid"
+      >
+        Save changes
+      </button>
+    </div>
+  </form>
+</div>

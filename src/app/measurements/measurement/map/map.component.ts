@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Picket } from '../../pickets/picket.model';
+import {LatLngLiteral} from '@agm/core';
 
 @Component({
   selector: 'app-map',
@@ -9,7 +10,9 @@ import { Picket } from '../../pickets/picket.model';
 export class MapComponent implements OnInit {
   @Input() heightMap = '600px';
   @Input() widthMap = '700px';
+  @Input() zoom: number;
   @Input() pickets: Picket[];
+  @Input() pathsList: {angle: number, distance: number, path: LatLngLiteral[]}[];
   @Input() disableDoubleClickZoom = false;
   @Input() currentDisplayedLatitude: number;
   @Input() currentDisplayedLongitude: number;
@@ -19,7 +22,6 @@ export class MapComponent implements OnInit {
 
   title = 'AGM project';
 
-  zoom: number;
   iconUrl = '../../../../assets/images/point.png';
 
   constructor() { }
@@ -32,8 +34,8 @@ export class MapComponent implements OnInit {
     this.zoom = 15;
 
     if (this.pickets && this.pickets.length) {
-      this.currentDisplayedLatitude = this.pickets[0].coordinateY;
-      this.currentDisplayedLongitude = this.pickets[0].coordinateX;
+      this.currentDisplayedLatitude = this.pickets[0].latitude;
+      this.currentDisplayedLongitude = this.pickets[0].longitude;
     } else if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         this.currentDisplayedLatitude = position.coords.latitude;
@@ -44,8 +46,8 @@ export class MapComponent implements OnInit {
 
   onMapDblClicked(event) {
     const picket = new Picket();
-    picket.coordinateY = event.coords.lat;
-    picket.coordinateX = event.coords.lng;
+    picket.latitude = event.coords.lat;
+    picket.longitude = event.coords.lng;
     this.picketAdded.emit(picket);
   }
 
@@ -53,8 +55,17 @@ export class MapComponent implements OnInit {
     const picket = new Picket();
     picket.name = event.label.text;
     picket.picketInternalId = event.title;
-    picket.coordinateY = event.latitude;
-    picket.coordinateX = event.longitude;
+    picket.latitude = event.latitude;
+    picket.longitude = event.longitude;
     this.picketEdited.emit({ picket, index });
+  }
+
+  onLineClicked(event, path) {
+    console.log(event);
+    console.log(path);
+  }
+
+  styleFunction() {
+    return 'red';
   }
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HistoryService } from '../history.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,7 +10,6 @@ export class HistorySearchComponent implements OnInit {
   measurementId: string;
 
   constructor(
-    private historyService: HistoryService,
     private router: Router
   ) { }
 

@@ -81,6 +81,8 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
       name: new FormControl(null, [Validators.required]),
       coordinateX: new FormControl(null, [Validators.required]),
       coordinateY: new FormControl(null, [Validators.required]),
+      coordinateX2000: new FormControl(null, [Validators.required]),
+      coordinateY2000: new FormControl(null, [Validators.required]),
       picketInternalId: new FormControl(null)
     });
 
@@ -90,8 +92,10 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   onAddPicket(picket?: Picket, copyPickets?: Picket[]) {
     const control = new FormGroup({
       name: new FormControl(picket.name, [Validators.required]),
-      coordinateX: new FormControl(picket.coordinateX, [Validators.required]),
-      coordinateY: new FormControl(picket.coordinateY, [Validators.required]),
+      coordinateX: new FormControl(picket.longitude, [Validators.required]),
+      coordinateY: new FormControl(picket.latitude, [Validators.required]),
+      coordinateX2000: new FormControl(picket.coordinateX2000, [Validators.required]),
+      coordinateY2000: new FormControl(picket.coordinateY2000, [Validators.required]),
       picketInternalId: new FormControl(picket.picketInternalId)
     });
 
@@ -105,8 +109,10 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   onEditPicket(event: { picketEdited: Picket, index: number }) {
     const control = new FormGroup({
       name: new FormControl(event.picketEdited.name, [Validators.required]),
-      coordinateX: new FormControl(event.picketEdited.coordinateX, [Validators.required]),
-      coordinateY: new FormControl(event.picketEdited.coordinateY, [Validators.required]),
+      coordinateX: new FormControl(event.picketEdited.longitude, [Validators.required]),
+      coordinateY: new FormControl(event.picketEdited.latitude, [Validators.required]),
+      coordinateX2000: new FormControl(event.picketEdited.coordinateX2000, [Validators.required]),
+      coordinateY2000: new FormControl(event.picketEdited.coordinateY2000, [Validators.required]),
       picketInternalId: new FormControl(event.picketEdited.picketInternalId, [Validators.required])
     });
 

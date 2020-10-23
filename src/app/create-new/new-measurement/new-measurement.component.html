@@ -31,10 +31,10 @@
             formControlName="place"
           >
           <span *ngIf="!place.valid && place.touched" class="help-block">
-        <span *ngIf="place.errors['required']" class="error-message mt-1">
-          The measurements place is required!
+          <span *ngIf="place.errors['required']" class="error-message mt-1">
+            The measurements place is required!
+          </span>
         </span>
-      </span>
         </div>
         <div class="form-group">
           <label for="owner">Owner:</label>
@@ -47,12 +47,26 @@
             formControlName="owner"
           >
           <span *ngIf="!owner.valid && owner.touched" class="help-block">
-        <span *ngIf="owner.errors['required']" class="error-message mt-1">
-          The measurements owner is required!
-        </span>
-      </span>
+            <span *ngIf="owner.errors['required']" class="error-message mt-1">
+              The measurements owner is required!
+            </span>
+          </span>
           <small *ngIf="!owner.touched" id="ownerHelp" class="form-text text-muted">Enter the name of the owner who took
-            the measurement.</small>
+            the measurement.
+          </small>
+        </div>
+        <div class="mb-1">District:</div>
+        <div ngbDropdown class="d-inline-block mb-3">
+          <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{ getDistrict() }}</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="district-select-dropdown">
+            <button
+              *ngFor="let district of districts"
+              (click)="onChangeDistrict(district)"
+              ngbDropdownItem
+            >
+              {{ district.name }}
+            </button>
+          </div>
         </div>
         <button
           class="btn btn-primary w-25"
@@ -99,16 +113,16 @@
                 <input
                   type="number"
                   class="form-control"
-                  placeholder="Enter coordinate X"
-                  formControlName="coordinateX"
+                  placeholder="Enter coordinate X in 2000"
+                  formControlName="coordinateX2000"
                 >
               </div>
               <div class="form-group w-75 mr-2">
                 <input
                   type="number"
                   class="form-control"
-                  placeholder="Enter coordinate Y"
-                  formControlName="coordinateY"
+                  placeholder="Enter coordinate Y in 2000"
+                  formControlName="coordinateY2000"
                 >
               </div>
               <button
@@ -140,7 +154,7 @@
             type="button"
             class="btn btn-primary mr-2"
             placement="right"
-            ngbTooltip="The first column is supposed to have picket name, the second - value of coordinate X and
+            ngbTooltip="Only supported file type is txt. The first column is supposed to have picket name, the second - value of coordinate X and
              the third one - value of coordinate Y. Each picket should be placed in separate line and each
               column should have one space break beetwen each other. Example:
               picket1 34.32222 67.444344\n

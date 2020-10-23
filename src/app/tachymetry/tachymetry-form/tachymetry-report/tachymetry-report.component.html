@@ -1,0 +1,81 @@
+<h3 class="mb-2">Tachymetry report for {{ tachymetryReport.internalMeasurementId }}</h3>
+<table class="table table-hover mb-3">
+  <thead class="table-head">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Tachymetr type</th>
+      <th scope="col">Temperature</th>
+      <th scope="col">Pressure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ tachymetryReport.tachymetryMetaData.tachymetryName }}</td>
+      <td>{{ tachymetryReport.tachymetryMetaData.tachymetrType }}</td>
+      <td>{{ tachymetryReport.tachymetryMetaData.temperature || ''}}</td>
+      <td>{{ tachymetryReport.tachymetryMetaData.pressure || ''}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-hover mb-3" *ngFor="let measuringStation of tachymetryReport.measuringStations;">
+  <thead class="table-head">
+    <tr>
+      <th scope="col">Station number</th>
+      <th scope="col">Station name</th>
+      <th scope="col">Network control point ID</th>
+      <th scope="col">Network control point name</th>
+      <th scope="col">Longitude</th>
+      <th scope="col">Latitude</th>
+      <th scope="col">Coordinate X 2000</th>
+      <th scope="col">Coordinate Y 2000</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ measuringStation.stationNumber }}</td>
+      <td>{{ measuringStation.stationName }}</td>
+      <td>{{ measuringStation.startingPoint.picketInternalId }}</td>
+      <td>{{ measuringStation.startingPoint.name }}</td>
+      <td>{{ measuringStation.startingPoint.longitude }}</td>
+      <td>{{ measuringStation.startingPoint.latitude }}</td>
+      <td>{{ measuringStation.startingPoint.coordinateX2000 }}</td>
+      <td>{{ measuringStation.startingPoint.coordinateY2000 }}</td>
+    </tr>
+    <tr>
+      <td>{{ measuringStation.stationNumber }}</td>
+      <td>{{ measuringStation.stationName }}</td>
+      <td>{{ measuringStation.endPoint.picketInternalId }}</td>
+      <td>{{ measuringStation.endPoint.name }}</td>
+      <td>{{ measuringStation.endPoint.longitude }}</td>
+      <td>{{ measuringStation.endPoint.latitude }}</td>
+      <td>{{ measuringStation.endPoint.coordinateX2000 }}</td>
+      <td>{{ measuringStation.endPoint.coordinateY2000 }}</td>
+    </tr>
+  </tbody>
+
+  <thead class="table-head">
+  <tr>
+    <th scope="col">Picket ID</th>
+    <th scope="col">Name</th>
+    <th scope="col">Distance</th>
+    <th scope="col">Angle</th>
+    <th scope="col">Longitude</th>
+    <th scope="col">Latitude</th>
+    <th scope="col">Coordinate X 2000</th>
+    <th scope="col">Coordinate Y 2000</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let picketMeasurementData of measuringStation.measuringPickets; let i = index;">
+      <td>{{ picketMeasurementData.calculatedPicket.picketInternalId }}</td>
+      <td>{{ picketMeasurementData.name }}</td>
+      <td>{{ picketMeasurementData.distance }}</td>
+      <td>{{ picketMeasurementData.angle }}</td>
+      <td>{{ picketMeasurementData.calculatedPicket.longitude }}</td>
+      <td>{{ picketMeasurementData.calculatedPicket.latitude }}</td>
+      <td>{{ picketMeasurementData.calculatedPicket.coordinateX2000 }}</td>
+      <td>{{ picketMeasurementData.calculatedPicket.coordinateY2000 }}</td>
+    </tr>
+  </tbody>
+</table>

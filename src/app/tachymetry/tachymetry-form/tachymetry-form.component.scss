@@ -3,7 +3,7 @@ input.ng-invalid.ng-touched {
 }
 
 .pickets-table-form {
-  height: 80vh;
+  height: 50vh;
 }
 
 .tooltip-body .tooltip-inner {
@@ -11,9 +11,4 @@ input.ng-invalid.ng-touched {
 }
 .tooltip-body .arrow::before {
   border-top-color: deepskyblue;
-}
-
-.district-select-dropdown {
-  height: 42vh;
-  overflow-y: auto;
 }

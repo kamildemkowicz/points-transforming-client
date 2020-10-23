@@ -13,14 +13,21 @@
   <agm-marker
     *ngFor="let picket of pickets; let i = index"
     [title]="picket.picketInternalId"
+    [agmFitBounds]="true"
     [label]="{
-		  color: '#d64161',
+		  color: '#ff0038',
 		  fontWeight: 'bold',
 		  text: picket.name
 	  }"
-    [latitude]="picket.coordinateY"
-    [longitude]="picket.coordinateX"
-    [iconUrl]="iconUrl"
+    [latitude]="picket.latitude"
+    [longitude]="picket.longitude"
+    [iconUrl]="{url: iconUrl, labelOrigin: {x:10,y:22}}"
     (markerClick)="onMarkerClicked($event, i)"
   ></agm-marker>
+  <agm-polygon
+    *ngFor="let line of pathsList"
+    [clickable]="true"
+    [paths]="line.path"
+    (polyClick)="onLineClicked($event, line)"
+  ></agm-polygon>
 </agm-map>

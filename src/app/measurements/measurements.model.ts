@@ -1,4 +1,5 @@
 import { Picket } from './pickets/picket.model';
+import { District } from './district/district.model';
 
 export class MeasurementsModel {
   measurementInternalId: string;
@@ -6,5 +7,6 @@ export class MeasurementsModel {
   creationDate: string;
   place: string;
   owner: string;
+  district: District;
   pickets: Picket[];
 }
