@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Routes } from '@angular/router';
 import { MeasurementResolverService } from '../measurements/measurement/measurement-resolver.service';
@@ -8,6 +8,10 @@ import { Picket } from '../measurements/pickets/picket.model';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { AddPicketModalComponent } from './add-picket-modal/add-picket-modal.component';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { UtilsService } from '../general/utils.service';
+import {District} from "../measurements/district/district.model";
+import {DistrictResolverService} from "../measurements/district/district-resolver.service";
 
 @Component({
   selector: 'app-edit-measurement-form',
@@ -19,11 +23,15 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   measurementForm: FormGroup;
   picketAddedSubscription: Subscription;
   copyPicket: Picket[];
+  districts: District[] = [];
+  selectedDistrict: District;
 
   constructor(
     private route: ActivatedRoute,
     private measurementsService: MeasurementsService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit(): void {
@@ -33,25 +41,30 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
       name: new FormControl(null, [Validators.required]),
       place: new FormControl(null, [Validators.required]),
       owner: new FormControl(null, [Validators.required]),
+      districtId: new FormControl(null, [Validators.required]),
       pickets: new FormArray([])
     });
 
     this.route.data.subscribe((resolve) => {
       this.measurement = resolve.measurement;
+      this.route.data.subscribe((districts) => {
+        this.districts = districts.districts;
+        if (this.measurement) {
+          this.selectedDistrict = this.measurement.district;
+          this.copyPicket = this.measurement.pickets.slice();
+          this.measurementForm.patchValue({
+            name: this.measurement.name,
+            place: this.measurement.place,
+            owner: this.measurement.owner,
+            districtId: this.measurement.district.id
+          });
 
-      if (this.measurement) {
-        this.copyPicket = this.measurement.pickets.slice();
-        this.measurementForm.patchValue({
-          name: this.measurement.name,
-          place: this.measurement.place,
-          owner: this.measurement.owner
-        });
-
-        this.measurement.pickets.forEach((picket) => {
-          this.onAddPicket(picket);
-        });
-      }
-    });
+          this.measurement.pickets.forEach((picket) => {
+            this.onAddPicket(picket);
+          });
+        }
+      }, error => this.utilsService.createErrorMessage(error.error.errors));
+    }, error => this.utilsService.createErrorMessage(error.error.errors));
   }
 
   ngOnDestroy(): void {
@@ -72,6 +85,10 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     return this.measurementForm.get('place');
   }
 
+  get district() {
+    return this.measurementForm.get('district');
+  }
+
   get pickets() {
     return (this.measurementForm.get('pickets') as FormArray).controls;
   }
@@ -79,12 +96,12 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   createEmptyPicketForm() {
     const control = new FormGroup({
       name: new FormControl(null, [Validators.required]),
-      coordinateX: new FormControl(null, [Validators.required]),
-      coordinateY: new FormControl(null, [Validators.required]),
-      coordinateX2000: new FormControl(null, [Validators.required]),
-      coordinateY2000: new FormControl(null, [Validators.required]),
+      longitude: new FormControl(null),
+      latitude: new FormControl(null),
+      coordinateX2000: new FormControl(null),
+      coordinateY2000: new FormControl(null),
       picketInternalId: new FormControl(null)
-    });
+    }, AtLeastOneFieldValidator);
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
   }
@@ -92,12 +109,12 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   onAddPicket(picket?: Picket, copyPickets?: Picket[]) {
     const control = new FormGroup({
       name: new FormControl(picket.name, [Validators.required]),
-      coordinateX: new FormControl(picket.longitude, [Validators.required]),
-      coordinateY: new FormControl(picket.latitude, [Validators.required]),
-      coordinateX2000: new FormControl(picket.coordinateX2000, [Validators.required]),
-      coordinateY2000: new FormControl(picket.coordinateY2000, [Validators.required]),
+      longitude: new FormControl(picket.longitude),
+      latitude: new FormControl(picket.latitude),
+      coordinateX2000: new FormControl(picket.coordinateX2000),
+      coordinateY2000: new FormControl(picket.coordinateY2000),
       picketInternalId: new FormControl(picket.picketInternalId)
-    });
+    }, AtLeastOneFieldValidator);
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
 
@@ -109,12 +126,12 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   onEditPicket(event: { picketEdited: Picket, index: number }) {
     const control = new FormGroup({
       name: new FormControl(event.picketEdited.name, [Validators.required]),
-      coordinateX: new FormControl(event.picketEdited.longitude, [Validators.required]),
-      coordinateY: new FormControl(event.picketEdited.latitude, [Validators.required]),
-      coordinateX2000: new FormControl(event.picketEdited.coordinateX2000, [Validators.required]),
-      coordinateY2000: new FormControl(event.picketEdited.coordinateY2000, [Validators.required]),
+      longitude: new FormControl(event.picketEdited.longitude),
+      latitude: new FormControl(event.picketEdited.latitude),
+      coordinateX2000: new FormControl(event.picketEdited.coordinateX2000),
+      coordinateY2000: new FormControl(event.picketEdited.coordinateY2000),
       picketInternalId: new FormControl(event.picketEdited.picketInternalId, [Validators.required])
-    });
+    }, AtLeastOneFieldValidator);
 
     (this.measurementForm.get('pickets') as FormArray).setControl(event.index, control);
 
@@ -129,6 +146,19 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
 
   onPicketEditedFromMap(event: { picket: Picket, index: number }) {
     this.openAddPicketModal(event.picket, event.index);
+  }
+
+  onChangeDistrict(district: District) {
+    this.measurementForm.patchValue({ districtId: district.id });
+    this.selectedDistrict = district;
+  }
+
+  getDistrict(): string {
+    if (this.selectedDistrict) {
+      return this.selectedDistrict.name;
+    }
+
+    return '';
   }
 
   private openAddPicketModal(picket: Picket, index?: number) {
@@ -160,11 +190,26 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     measurementFormValues.measurementInternalId = this.measurement.measurementInternalId;
 
     this.measurementsService.updateMeasurement(measurementFormValues).subscribe((measurementUpdated: MeasurementsModel) => {
-      console.log(measurementUpdated);
-    });
-    this.measurementForm.reset();
+      this.toastr.success('Measurement has been edited', null);
+    }, (error => {
+      this.toastr.error( this.utilsService.createErrorMessage(error.error.errors));
+    })
+    );
   }
+}
 
+export function AtLeastOneFieldValidator(group: FormGroup): {[key: string]: any} {
+  let isAtLeastOne = false;
+  if (group && group.controls) {
+    console.log(group.controls);
+    for (const control in group.controls) {
+      if (group.controls.hasOwnProperty(control) && group.controls[control].valid && group.controls[control].value) {
+        isAtLeastOne = true;
+        break;
+      }
+    }
+  }
+  return isAtLeastOne ? null : { required: true };
 }
 
 export const editMeasurementRoutes: Routes = [
@@ -172,11 +217,12 @@ export const editMeasurementRoutes: Routes = [
     path: 'edit/:id',
     component: EditMeasurementFormComponent,
     resolve: {
-      measurement: MeasurementResolverService
+      measurement: MeasurementResolverService,
+      districts: DistrictResolverService
     }
   }
 ];
 
 export const editMeasurementProviders = [
-  MeasurementResolverService
+  MeasurementResolverService, DistrictResolverService
 ];

@@ -43,6 +43,7 @@ import {
 import { TachymetryService } from './tachymetry/tachymetry.service';
 import { DistrictService } from './measurements/district/district.service';
 import { TachymetryReportComponent } from './tachymetry/tachymetry-form/tachymetry-report/tachymetry-report.component';
+import { UtilsService } from './general/utils.service';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { TachymetryReportComponent } from './tachymetry/tachymetry-form/tachymet
     historyResultProviders,
     TachymetryService,
     DistrictService,
-    districtsProvider
+    districtsProvider,
+    UtilsService
   ],
   bootstrap: [AppComponent],
   entryComponents: [

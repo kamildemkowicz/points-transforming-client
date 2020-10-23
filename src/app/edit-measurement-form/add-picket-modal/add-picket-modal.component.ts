@@ -24,8 +24,8 @@ export class AddPicketModalComponent implements OnInit {
   ngOnInit() {
     this.picketForm = new FormGroup({
       name: new FormControl(this.picketFromMap.name, [Validators.required]),
-      coordinateX: new FormControl(this.picketFromMap.longitude, [Validators.required]),
-      coordinateY: new FormControl(this.picketFromMap.latitude, [Validators.required]),
+      longitude: new FormControl(this.picketFromMap.longitude, [Validators.required]),
+      latitude: new FormControl(this.picketFromMap.latitude, [Validators.required]),
       picketInternalId: new FormControl(this.picketFromMap.picketInternalId)
     });
   }
@@ -34,12 +34,12 @@ export class AddPicketModalComponent implements OnInit {
     return this.picketForm.get('name');
   }
 
-  get coordinateX() {
-    return this.picketForm.get('coordinateX');
+  get longitude() {
+    return this.picketForm.get('longitude');
   }
 
-  get coordinateY() {
-    return this.picketForm.get('coordinateY');
+  get latitude() {
+    return this.picketForm.get('latitude');
   }
 
   onSubmit() {

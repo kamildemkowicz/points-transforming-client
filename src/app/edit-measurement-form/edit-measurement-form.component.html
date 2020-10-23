@@ -61,6 +61,21 @@
           <small *ngIf="!owner.touched" id="ownerHelp" class="form-text text-muted">Enter the name of the owner who took
             the measurement.</small>
         </div>
+        <div class="d-flex flex-row align-items-baseline">
+          <div class="mb-1 mr-2">District:</div>
+          <div ngbDropdown class="d-inline-block mb-3">
+            <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{ getDistrict() }}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="district-select-dropdown">
+              <button
+                *ngFor="let district of districts"
+                (click)="onChangeDistrict(district)"
+                ngbDropdownItem
+              >
+                {{ district.name }}
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="d-flex flex-column w-100 pickets-table-form">
           <label class="mb-2 pt-2">Pickets:</label>
           <div formArrayName="pickets" class="mb-2 overflow-auto">
@@ -98,7 +113,7 @@
                     type="number"
                     class="form-control"
                     placeholder="Longitude"
-                    formControlName="coordinateX"
+                    formControlName="longitude"
                   >
                 </div>
                 <div class="form-group w-75 mr-2">
@@ -106,7 +121,7 @@
                     type="number"
                     class="form-control"
                     placeholder="Latitude"
-                    formControlName="coordinateY"
+                    formControlName="latitude"
                   >
                 </div>
                 <button
