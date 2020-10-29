@@ -31,8 +31,8 @@ export class DetailsComponent implements OnInit, OnChanges {
   }
 
   showTachymetryOnMap() {
-    this.isTachymetryShown = true;
-    this.showTachymetry.emit(true);
+    this.isTachymetryShown = !this.isTachymetryShown;
+    this.showTachymetry.emit(this.isTachymetryShown);
   }
 
 }

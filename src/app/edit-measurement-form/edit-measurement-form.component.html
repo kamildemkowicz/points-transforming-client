@@ -1,6 +1,20 @@
 <div class="p-4">
-  <h3 class="pb-3">Edit measurement</h3>
-  <form [formGroup]="measurementForm" (ngSubmit)="onSubmit()">
+  <div class="d-flex flex-row justify-content-between">
+    <h3 class="pb-3">Edit measurement</h3>
+    <div class="d-flex flex-row pr-4">
+      <div class="object-creation-switch mr-2" (click)="switchGeodeticObjectsShown()">
+        <em *ngIf="isGeodeticObjectsShown" class="far fa-check-square mr-1"></em>
+        <em *ngIf="!isGeodeticObjectsShown" class="far fa-square mr-1"></em>
+        Show objects
+      </div>
+      <div class="object-creation-switch" (click)="switchObjectCreationMode()">
+        <em *ngIf="isObjectCreationMode" class="far fa-check-square mr-1"></em>
+        <em *ngIf="!isObjectCreationMode" class="far fa-square mr-1"></em>
+        Object creation mode
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="measurementForm">
     <div class="d-flex flex-row">
       <div class="d-flex flex-column w-100 mr-3">
         <div class="form-group">
@@ -112,16 +126,16 @@
                   <input
                     type="number"
                     class="form-control"
-                    placeholder="Longitude"
-                    formControlName="longitude"
+                    placeholder="Latitude"
+                    formControlName="latitude"
                   >
                 </div>
                 <div class="form-group w-75 mr-2">
                   <input
                     type="number"
                     class="form-control"
-                    placeholder="Latitude"
-                    formControlName="latitude"
+                    placeholder="Longitude"
+                    formControlName="longitude"
                   >
                 </div>
                 <button
@@ -139,6 +153,12 @@
             <button
               class="btn btn-primary mr-2 w-25"
               type="button"
+              (click)="fileInput.click()">
+              Upload pickets
+            </button>
+            <button
+              class="btn btn-primary mr-2 w-25"
+              type="button"
               (click)="createEmptyPicketForm()"
             >
               Add picket
@@ -151,13 +171,28 @@
             </button>
             <button
               class="btn btn-primary w-25 mr-2"
-              type="submit"
+              type="button"
+              (click)="onSubmit()"
               [disabled]="measurementForm.invalid"
             >
               Save changes
             </button>
-            <div class="form-group d-flex flex-row mb-0 pt-1">
-              <input type="file" class="form-control-file w-100" id="exampleFormControlFile1">
+          </div>
+          <div class="form-group d-flex flex-column mb-2 pt-2">
+            <input
+              type="file"
+              style="display: none"
+              #attachments
+              (change)="uploadFile($event)"
+              class="form-control-file w-100"
+              #fileInput
+              multiple="true"
+            >
+            <div *ngFor="let selected of listOfFiles; let index = index" class="d-flex flex-row">
+              <div class="mr-1"><strong><em>{{selected}}</em></strong></div>
+              <div (click)="removeSelectedFile(index)">
+                <em class="fas fa-trash-alt"></em>
+              </div>
             </div>
           </div>
         </div>
@@ -165,11 +200,17 @@
       <div class="d-flex w-100">
         <app-map
           [pickets]="copyPicket"
+          [picketsToHighlight]="picketInternalIdsToHighlight"
+          [editedObject]="editedObject"
+          [objectsCreated]="objectsCreated"
+          [objectsSaved]="isGeodeticObjectsShown ? geodeticObjectsSaved : []"
           [heightMap]="'700px'"
           [widthMap]="'900px'"
           [disableDoubleClickZoom]="true"
           (picketAdded)="onPicketAddedFromMap($event)"
           (picketEdited)="onPicketEditedFromMap($event)"
+          (objectFinished)="onObjectFinished($event)"
+          (objectLineClicked)="onObjectLineClicked($event)"
         >
         </app-map>
       </div>

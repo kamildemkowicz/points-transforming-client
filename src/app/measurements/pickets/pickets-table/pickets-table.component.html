@@ -1,21 +1,23 @@
-<table class="table table-hover">
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+<table class="table table-hover mb-0">
   <thead class="table-head">
-  <tr>
-    <th scope="col">Id</th>
-    <th scope="col">Name</th>
-    <th scope="col">Coordinate X</th>
-    <th scope="col">Coordinate Y</th>
-  </tr>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Latitude</th>
+      <th scope="col">Longitude</th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let picket of pickets; let i = index;"
-      (click)="onPicketTableClicked(picket)"
-      [ngClass]="{'selected-picket': picket === selectedPicket}"
-  >
-    <th scope="row">{{ i + 1 }}</th>
-    <td>{{ picket.name }}</td>
-    <td>{{ picket.longitude }}</td>
-    <td>{{ picket.latitude }}</td>
-  </tr>
+    <tr *ngFor="let picket of pickets; let i = index;"
+        (click)="onPicketTableClicked(picket)"
+        [ngClass]="{'selected-picket': picket === selectedPicket}"
+    >
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ picket.name }}</td>
+      <td>{{ picket.latitude }}</td>
+      <td>{{ picket.longitude }}</td>
+    </tr>
   </tbody>
 </table>
+</div>

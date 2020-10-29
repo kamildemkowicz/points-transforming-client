@@ -15,19 +15,53 @@
     [title]="picket.picketInternalId"
     [agmFitBounds]="true"
     [label]="{
-		  color: '#ff0038',
+		  color: getLabelColor(picket.picketInternalId),
 		  fontWeight: 'bold',
 		  text: picket.name
 	  }"
     [latitude]="picket.latitude"
     [longitude]="picket.longitude"
-    [iconUrl]="{url: iconUrl, labelOrigin: {x:10,y:22}}"
+    [iconUrl]="{ url: iconUrl, labelOrigin: {x:10,y:22} }"
     (markerClick)="onMarkerClicked($event, i)"
+    (markerRightClick)="onMarkerRightClicked(picket, i)"
   ></agm-marker>
   <agm-polygon
-    *ngFor="let line of pathsList"
+    *ngFor="let lineDetails of pathsList"
     [clickable]="true"
-    [paths]="line.path"
-    (polyClick)="onLineClicked($event, line)"
+    [paths]="lineDetails.path"
+    (polyClick)="onLineClicked($event, lineDetails)"
   ></agm-polygon>
+  <agm-polyline [strokeColor]="'#2196f3'">
+    <agm-polyline-point
+      *ngFor="let point of editedObject.objectPath"
+      [latitude]="point.lat"
+      [longitude]="point.lng"
+    >
+    </agm-polyline-point>
+  </agm-polyline>
+  <agm-polyline *ngFor="let object of objectsCreated" [strokeColor]="'#000000'">
+    <agm-polyline-point
+      *ngFor="let point of object.objectPath"
+      [latitude]="point.lat"
+      [longitude]="point.lng"
+    >
+    </agm-polyline-point>
+  </agm-polyline>
+  <agm-polyline
+    *ngFor="let object of objectsSaved"
+    [strokeColor]="object.color"
+    (lineClick)="onObjectLineClicked(object)"
+  >
+    <agm-polyline-point
+      [latitude]="object.singleLines[0].startPicket.latitude"
+      [longitude]="object.singleLines[0].startPicket.longitude"
+    >
+    </agm-polyline-point>
+    <agm-polyline-point
+      *ngFor="let point of object.singleLines"
+      [latitude]="point.endPicket.latitude"
+      [longitude]="point.endPicket.longitude"
+    >
+    </agm-polyline-point>
+  </agm-polyline>
 </agm-map>

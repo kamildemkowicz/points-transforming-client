@@ -279,12 +279,13 @@ export class TachymetryFormComponent implements OnInit {
     let stationDetailsIndex = 1;
     let measuringStation = new MeasuringStation();
     measuringStation.picketsMeasurementData = [];
+
     lines.forEach(line => {
       // station creation
       if (isStationDetails) {
         if (line !== '') {
           if (stationDetailsIndex === 1) {
-            measuringStation.stationNumber = line as any;
+            measuringStation.stationNumber = +line;
           }
 
           if (stationDetailsIndex === 2) {
@@ -295,8 +296,8 @@ export class TachymetryFormComponent implements OnInit {
             const splittedLine = line.split(' ');
             const startingGeodeticControlPoint = new GeodeticControlNetworkPoint();
             startingGeodeticControlPoint.name = splittedLine[0];
-            startingGeodeticControlPoint.coordinateX = splittedLine[1] as any;
-            startingGeodeticControlPoint.coordinateY = splittedLine[2] as any;
+            startingGeodeticControlPoint.coordinateX = +splittedLine[1];
+            startingGeodeticControlPoint.coordinateY = +splittedLine[2];
             measuringStation.startingPoint = startingGeodeticControlPoint;
           }
 
@@ -304,8 +305,8 @@ export class TachymetryFormComponent implements OnInit {
             const splittedLine = line.split(' ');
             const endGeodeticControlPoint = new GeodeticControlNetworkPoint();
             endGeodeticControlPoint.name = splittedLine[0];
-            endGeodeticControlPoint.coordinateX = splittedLine[1] as any;
-            endGeodeticControlPoint.coordinateY = splittedLine[2] as any;
+            endGeodeticControlPoint.coordinateX = +splittedLine[1];
+            endGeodeticControlPoint.coordinateY = +splittedLine[2];
             measuringStation.endPoint = endGeodeticControlPoint;
           }
           stationDetailsIndex++;
@@ -319,8 +320,8 @@ export class TachymetryFormComponent implements OnInit {
           const splittedLine = line.split(' ');
           const picketMeasurementData = new PicketMeasurementData();
           picketMeasurementData.picketName = splittedLine[0];
-          picketMeasurementData.distance = splittedLine[1] as any;
-          picketMeasurementData.angle = splittedLine[2] as any;
+          picketMeasurementData.distance = +splittedLine[1];
+          picketMeasurementData.angle = +splittedLine[2];
           measuringStation.picketsMeasurementData.push(picketMeasurementData);
 
           if (index === lines.length) {

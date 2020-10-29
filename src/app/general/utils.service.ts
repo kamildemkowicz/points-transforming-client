@@ -18,7 +18,7 @@ export class UtilsService {
         errorMessage += 'Reasons: \n';
         error.reasons.forEach(reason => {
           if (reason.message) {
-            errorMessage += error.message + '\n';
+            errorMessage += reason.message + '\n';
           }
         });
       }

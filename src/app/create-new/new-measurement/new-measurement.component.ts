@@ -7,6 +7,8 @@ import { Picket } from '../../measurements/pickets/picket.model';
 import { ToastrService } from 'ngx-toastr';
 import { DistrictResolverService } from '../../measurements/district/district-resolver.service';
 import { District } from '../../measurements/district/district.model';
+import { UtilsService } from '../../general/utils.service';
+import { NotificationService } from '../../general/notification.service';
 
 @Component({
   selector: 'app-new-measurement',
@@ -20,7 +22,9 @@ export class NewMeasurementComponent implements OnInit {
     private measurementsService: MeasurementsService,
     private router: Router,
     private toastr: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private utilsService: UtilsService,
+    private notificationService: NotificationService
   ) { }
 
   get name() {
@@ -74,7 +78,7 @@ export class NewMeasurementComponent implements OnInit {
         name: new FormControl(null, [Validators.required]),
         place: new FormControl(null, [Validators.required]),
         owner: new FormControl(null, [Validators.required]),
-        districtId: new FormControl(null, [Validators.required]),
+        districtId: new FormControl(this.districts[0], [Validators.required]),
         pickets: new FormArray([])
       });
 
@@ -161,7 +165,7 @@ export class NewMeasurementComponent implements OnInit {
     this.measurementsService.createMeasurement(this.measurementForm.value).subscribe((measurementCreated: MeasurementsModel) => {
       this.router.navigate(['measurements', measurementCreated.measurementInternalId]);
     }, (error => {
-      this.toastr.error(error.error.message, null, { timeOut: 3000 });
+      this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
     })
     );
   }
@@ -184,8 +188,8 @@ export class NewMeasurementComponent implements OnInit {
   private addNewPicketFromTxtFile(picket: string[]): void {
     const newPicket = new Picket();
     newPicket.name = picket[0];
-    newPicket.coordinateX2000 = picket[1] as any;
-    newPicket.coordinateY2000 = picket[2] as any;
+    newPicket.coordinateX2000 = +picket[1];
+    newPicket.coordinateY2000 = +picket[2];
     this.onAddPicketFromTxt(newPicket);
   }
 

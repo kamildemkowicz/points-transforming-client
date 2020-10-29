@@ -1,0 +1,94 @@
+<div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Picket measurement details</h5>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="activeModal.dismissAll('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex flex-column p-4">
+        <div class="d-flex flex-row w-100">
+          <div class="d-flex flex-row w-25 justify-content-end">
+            <div class="mr-1" [ngClass]="{'point-name-color': isLeftPointHighLighted}">{{ pathDetails.endPoint.name }}</div>
+            <div class="picket-icon"></div>
+          </div>
+          <div class="d-flex flex-row w-50">
+          </div>
+          <div class="d-flex flex-row w-25 justify-content-start">
+            <div class="picket-icon"></div>
+            <div class="mr-1" [ngClass]="{'point-name-color': isRightPointHighLighted}">{{ pathDetails.measuredPicket.name }}</div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-row w-100 lines-area">
+          <div class="d-flex flex-row w-25"></div>
+          <div class="d-flex flex-row w-50">
+            <div class="d-flex line-left line-width" [ngClass]="{'line-color': isLeftLineHighLighted}"></div>
+            <div class="d-flex line-width angle" [ngClass]="{'angle-color': isAngleHighLighted}"></div>
+            <div class="d-flex line-right line-width justify-content-end" [ngClass]="{'line-color': isRightLineHighLighted}"></div>
+          </div>
+          <div class="d-flex flex-row w-25"></div>
+        </div>
+
+        <div class="d-flex flex-row w-100 justify-content-center">
+          <div class="bottom-point picket-icon"></div>
+        </div>
+        <div class="d-flex flex-row w-100 justify-content-center">
+          <div class="bottom-point" [ngClass]="{'point-name-color': isMiddlePointHighLighted}">{{ pathDetails.startingPoint.name }}</div>
+        </div>
+
+        <div class="d-flex mt-3">
+          <table class="table table-hover">
+            <thead class="table-head">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Latitude</th>
+                <th scope="col">Longitude</th>
+                <th scope="col">Angle</th>
+                <th scope="col">Distance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr (mouseenter)="turnOnMiddlePointColor()" (mouseleave)="turnOffMiddlePointColor()">
+                <td>{{ pathDetails.startingPoint.name }}</td>
+                <td>{{ pathDetails.startingPoint.latitude }}</td>
+                <td>{{ pathDetails.startingPoint.longitude }}</td>
+                <td (mouseenter)="turnOnAngleColor()" (mouseleave)="turnOffAngleColor()">{{ pathDetails.angle }}</td>
+                <td></td>
+              </tr>
+              <tr (mouseenter)="turnOnLeftPointColor()" (mouseleave)="turnOffLeftPointColor()">
+                <td>{{ pathDetails.endPoint.name }}</td>
+                <td>{{ pathDetails.endPoint.latitude }}</td>
+                <td>{{ pathDetails.endPoint.longitude }}</td>
+                <td (mouseenter)="turnOnAngleColor()" (mouseleave)="turnOffAngleColor()"></td>
+                <td (mouseenter)="turnOnLeftLineColor()" (mouseleave)="turnOffLeftLineColor()">{{ pathDetails.controlPointsDistance }}</td>
+              </tr>
+              <tr (mouseenter)="turnOnRightPointColor()" (mouseleave)="turnOffRightPointColor()">
+                <td>{{ pathDetails.measuredPicket.name }}</td>
+                <td>{{ pathDetails.measuredPicket.latitude }}</td>
+                <td>{{ pathDetails.measuredPicket.longitude }}</td>
+                <td (mouseenter)="turnOnAngleColor()" (mouseleave)="turnOffAngleColor()"></td>
+                <td (mouseenter)="turnOnRightLineColor()" (mouseleave)="turnOffRightLineColor()">{{ pathDetails.distance }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-dismiss="modal"
+        (click)="activeModal.dismissAll('Cross click')"
+      >
+        Close
+      </button>
+    </div>
+</div>

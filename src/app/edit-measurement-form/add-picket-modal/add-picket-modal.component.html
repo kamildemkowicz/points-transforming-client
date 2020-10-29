@@ -30,21 +30,6 @@
           </span>
         </div>
         <div class="form-group">
-          <label for="longitude">Longitude:</label>
-          <input
-            type="number"
-            class="form-control w-75"
-            id="longitude"
-            placeholder="Enter longitude"
-            formControlName="longitude"
-          >
-          <span *ngIf="!longitude.valid && longitude.touched" class="help-block">
-            <span *ngIf="longitude.errors['required']" class="error-message mt-1">
-              Longitude is required!
-            </span>
-          </span>
-        </div>
-        <div class="form-group">
           <label for="latitude">Latitude:</label>
           <input
             type="number"
@@ -56,6 +41,21 @@
           <span *ngIf="!latitude.valid && latitude.touched" class="help-block">
             <span *ngIf="latitude.errors['required']" class="error-message mt-1">
               Latitude is required!
+            </span>
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="longitude">Longitude:</label>
+          <input
+            type="number"
+            class="form-control w-75"
+            id="longitude"
+            placeholder="Enter longitude"
+            formControlName="longitude"
+          >
+          <span *ngIf="!longitude.valid && longitude.touched" class="help-block">
+            <span *ngIf="longitude.errors['required']" class="error-message mt-1">
+              Longitude is required!
             </span>
           </span>
         </div>

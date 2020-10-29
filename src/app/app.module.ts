@@ -44,6 +44,11 @@ import { TachymetryService } from './tachymetry/tachymetry.service';
 import { DistrictService } from './measurements/district/district.service';
 import { TachymetryReportComponent } from './tachymetry/tachymetry-form/tachymetry-report/tachymetry-report.component';
 import { UtilsService } from './general/utils.service';
+import { TachymetryViewComponent } from './measurements/measurement/tachymetry/tachymetry-view/tachymetry-view.component';
+import { NotificationService } from './general/notification.service';
+import { AddObjectModalComponent } from './edit-measurement-form/add-object-modal/add-object-modal.component';
+import { GeodeticObjectService } from './measurements/measurement/geodeticobject/geodetic-object.service';
+import { EditObjectModalComponent } from './edit-measurement-form/edit-object-modal/edit-object-modal.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +72,10 @@ import { UtilsService } from './general/utils.service';
     TachymetryComponent,
     TachymetryFormComponent,
     AddMeasuringStationModalComponent,
-    TachymetryReportComponent
+    TachymetryReportComponent,
+    TachymetryViewComponent,
+    AddObjectModalComponent,
+    EditObjectModalComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +90,16 @@ import { UtilsService } from './general/utils.service';
     ReactiveFormsModule,
     NgxSpinnerModule,
     FormsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot({
+      progressBar: true,
+      progressAnimation: 'increasing',
+      preventDuplicates: true,
+      iconClasses: {
+        error: 'toast-error',
+        success: 'toast-success'
+      },
+      closeButton: true
+    })
   ],
   providers: [
     MeasurementsService,
@@ -95,12 +112,17 @@ import { UtilsService } from './general/utils.service';
     TachymetryService,
     DistrictService,
     districtsProvider,
-    UtilsService
+    UtilsService,
+    NotificationService,
+    GeodeticObjectService
   ],
   bootstrap: [AppComponent],
   entryComponents: [
     AddPicketModalComponent,
-    AddMeasuringStationModalComponent
+    AddMeasuringStationModalComponent,
+    TachymetryViewComponent,
+    AddObjectModalComponent,
+    EditObjectModalComponent
   ]
 })
 export class AppModule { }

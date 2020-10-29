@@ -1,0 +1,67 @@
+.picket-icon {
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-image: url('../../../../../assets/images/point.png');
+}
+
+.line-width {
+  width: 33%;
+  font-size: 100px;
+  font-weight: 100;
+}
+
+.line-left {
+  position: relative;
+  z-index: 1;
+  top: 46px;
+  left: 15px;
+  width: 212px;
+  height: 1px;
+  background-color: #000;
+  transform: rotate(26deg);
+  -ms-transform: rotate(26deg);
+  -webkit-transform: rotate(26deg);
+}
+
+.line-right {
+  position: relative;
+  z-index: 1;
+  top: 46px;
+  left: -2px;
+  width: 219px;
+  height: 1px;
+  background-color: #000;
+  transform: rotate(155deg);
+  -ms-transform: rotate(155deg);
+  -webkit-transform: rotate(155deg);
+}
+
+.lines-area {
+  height: 100px;
+}
+
+.bottom-point {
+  padding-right: 6px;
+}
+
+.angle {
+  margin-top: 53px;
+  margin-left: 10px;
+  border-top: black 1px solid;
+  border-top-left-radius: 39px;
+  border-top-right-radius: 39px;
+  width: 80px;
+}
+
+.line-color {
+  background-color: #ff0000
+}
+
+.angle-color {
+  border-top-color: #ff0000
+}
+
+.point-name-color {
+  color: #ff0000;
+}

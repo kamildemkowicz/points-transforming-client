@@ -32,8 +32,13 @@
         <i>{{ measurement.creationDate | date:'medium' }}</i>
       </div>
     </div>
-    <button class="btn btn-primary" [routerLink]="['/history', measurement.measurementInternalId]" (click)="$event.stopPropagation();">
-      See editing stories
-    </button>
+    <div class="d-flex flex-row">
+      <button class="btn btn-primary mr-2" [routerLink]="['/measurements', measurement.measurementInternalId]" (click)="$event.stopPropagation();">
+        Details
+      </button>
+      <button class="btn btn-primary" [routerLink]="['/history', measurement.measurementInternalId]" (click)="$event.stopPropagation();">
+        History
+      </button>
+    </div>
   </div>
 </div>

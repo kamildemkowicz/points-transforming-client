@@ -1,0 +1,109 @@
+<div class="modal-content">
+  <form [formGroup]="objectForm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Create new object</h5>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="activeModal.dismissAll('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex flex-column w-100 mr-3">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="name"
+            placeholder="Enter object name"
+            formControlName="name"
+          >
+          <span *ngIf="!name.valid && name.touched" class="help-block">
+            <span *ngIf="name.errors['required']" class="error-message mt-1">
+              The object name is required!
+            </span>
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="color">Description:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="description"
+            placeholder="Enter object description"
+            formControlName="description"
+          >
+        </div>
+        <div class="form-group">
+          <label for="symbol">Object symbol:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="symbol"
+            placeholder="Enter object symbol"
+            formControlName="symbol"
+          >
+          <span *ngIf="!symbol.valid && symbol.touched" class="help-block">
+            <span *ngIf="symbol.errors['required']" class="error-message mt-1">
+              The object symbol is required!
+            </span>
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="color">Object color:</label>
+          <input
+            type="text"
+            class="form-control w-75"
+            id="color"
+            placeholder="Enter object color"
+            formControlName="color"
+          >
+          <span *ngIf="!color.valid && color.touched" class="help-block">
+            <span *ngIf="color.errors['required']" class="error-message mt-1">
+              The object color is required!
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="d-flex flex-column pt-3 path-view">
+        <div class="d-flex flex-column align-items-center">
+          <div>{{ geodeticObject.singleLines[0].startPicket.picketInternalId }}</div>
+          <em class="fas fa-arrow-down"></em>
+        </div>
+        <div class="d-flex flex-column align-items-center" *ngFor="let line of geodeticObject.singleLines; let i = index">
+          <div>{{ line.endPicket.picketInternalId }}</div>
+          <em *ngIf="i !== geodeticObject.singleLines.length - 1" class="fas fa-arrow-down"></em>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+        (click)="activeModal.dismissAll('Cancel button')"
+      >
+        Close
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        (click)="onSubmit()"
+        [disabled]="objectForm.invalid"
+      >
+        Update
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="removeObject()"
+      >
+        Delete
+      </button>
+    </div>
+  </form>
+</div>

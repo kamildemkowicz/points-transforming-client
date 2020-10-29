@@ -24,3 +24,15 @@ body {
 .error-message {
   color: red;
 }
+
+.toast-success {
+  background-color: green;
+  background-image: none;
+  padding-left: 8px !important;
+}
+
+.toast-error {
+  background-color: #e82424;
+  background-image: none;
+  padding-left: 8px !important;
+}
