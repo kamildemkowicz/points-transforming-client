@@ -125,13 +125,7 @@
           <button
             type="button"
             class="btn btn-primary mr-2"
-            placement="right"
-            ngbTooltip="Only supported file type is txt. The first column is supposed to have picket name, the second - value of coordinate X and
-             the third one - value of coordinate Y. Each picket should be placed in separate line and each
-              column should have one space break beetwen each other. Example:
-              picket1 34.32222 67.444344\n
-              picket2 33.32272 83.4446344\n"
-            tooltipClass="tooltip-body"
+            (click)="openTachymetryInfoModal()"
           >
             ?
           </button>

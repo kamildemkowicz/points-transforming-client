@@ -1,6 +1,5 @@
 import { Picket } from './pickets/picket.model';
 import { District } from './district/district.model';
-import { GeodeticObject } from './measurement/geodeticobject/geodetic-object.model';
 
 export class MeasurementsModel {
   measurementInternalId: string;
@@ -10,5 +9,4 @@ export class MeasurementsModel {
   owner: string;
   district: District;
   pickets: Picket[];
-  geodeticObjects: GeodeticObject[];
 }

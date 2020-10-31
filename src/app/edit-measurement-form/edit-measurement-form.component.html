@@ -151,10 +151,12 @@
           </div>
           <div class="d-flex flex-row">
             <button
-              class="btn btn-primary mr-2 w-25"
+              class="btn btn-primary w-25 mr-2"
               type="button"
-              (click)="fileInput.click()">
-              Upload pickets
+              (click)="onSubmit()"
+              [disabled]="measurementForm.invalid"
+            >
+              Save changes
             </button>
             <button
               class="btn btn-primary mr-2 w-25"
@@ -170,12 +172,17 @@
               Add tachymetry
             </button>
             <button
-              class="btn btn-primary w-25 mr-2"
+              class="btn btn-primary mr-2 w-25"
               type="button"
-              (click)="onSubmit()"
-              [disabled]="measurementForm.invalid"
+              (click)="fileInput.click()">
+              Upload pickets
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary mr-2"
+              (click)="openPicketsUploadingHelper()"
             >
-              Save changes
+              ?
             </button>
           </div>
           <div class="form-group d-flex flex-column mb-2 pt-2">
@@ -202,13 +209,14 @@
           [pickets]="copyPicket"
           [picketsToHighlight]="picketInternalIdsToHighlight"
           [editedObject]="editedObject"
-          [objectsCreated]="objectsCreated"
           [objectsSaved]="isGeodeticObjectsShown ? geodeticObjectsSaved : []"
           [heightMap]="'700px'"
           [widthMap]="'900px'"
           [disableDoubleClickZoom]="true"
+
           (picketAdded)="onPicketAddedFromMap($event)"
           (picketEdited)="onPicketEditedFromMap($event)"
+
           (objectFinished)="onObjectFinished($event)"
           (objectLineClicked)="onObjectLineClicked($event)"
         >

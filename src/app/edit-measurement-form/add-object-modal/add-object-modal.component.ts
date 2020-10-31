@@ -10,6 +10,7 @@ import { GeodeticObject } from '../../measurements/measurement/geodeticobject/ge
 })
 export class AddObjectModalComponent implements OnInit {
   @Input() path: { picketInternalId: string, lat: number, lng: number }[] = [];
+  @Input() measurementInternalId: string;
 
   @Output() objectAdded = new EventEmitter<GeodeticObject>();
 
@@ -25,7 +26,8 @@ export class AddObjectModalComponent implements OnInit {
       description: new FormControl(null),
       symbol: new FormControl(null, [Validators.required]),
       color: new FormControl(null, [Validators.required]),
-      singleLines: new FormArray([])
+      singleLines: new FormArray([]),
+      measurementInternalId: new FormControl(this.measurementInternalId, [Validators.required])
     });
 
     this.createSingleLines();

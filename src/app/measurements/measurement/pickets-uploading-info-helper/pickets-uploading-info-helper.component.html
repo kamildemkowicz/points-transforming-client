@@ -1,0 +1,34 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">How to create pickets file to upload?</h5>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="activeModal.dismissAll('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Only supported file type is <strong>txt</strong>.<br>
+    The <strong>first</strong> column is supposed to have picket name,<br>
+    the <strong>second</strong> - value of coordinate X in geodetic coordinates system 2000 and<br>
+    the <strong>third</strong> one - value of coordinate Y in the same system.<br>
+    Each picket should be placed in separate line and<br>
+    each column should have one space break between each other.<br><br>
+    Example:<br><br>
+    picket1 5575321.99 6563290.64<br>
+    picket2 5575381.99 6563220.64
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="activeModal.dismissAll('Cancel button')"
+    >
+      Close
+    </button>
+  </div>
+</div>

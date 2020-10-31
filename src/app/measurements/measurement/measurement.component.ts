@@ -11,6 +11,11 @@ import { PicketReport } from '../../tachymetry/models/tachymetry-report/picket-r
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { TachymetryViewComponent } from './tachymetry/tachymetry-view/tachymetry-view.component';
 import { UtilsService } from '../../general/utils.service';
+import { GeodeticObjectDto } from './geodeticobject/geodetic-object-dto.model';
+import { GeodeticObjectService } from './geodeticobject/geodetic-object.service';
+import { NotificationService } from '../../general/notification.service';
+import {EditObjectModalComponent} from "../../edit-measurement-form/edit-object-modal/edit-object-modal.component";
+import {GeodeticObject} from "./geodeticobject/geodetic-object.model";
 
 @Component({
   selector: 'app-measurement',
@@ -20,6 +25,7 @@ import { UtilsService } from '../../general/utils.service';
 export class MeasurementComponent implements OnInit {
   measurement: MeasurementsModel;
   tachymetries: TachymetryReport[];
+
   pathsList: {
     startingPoint: PicketReport,
     endPoint: PicketReport,
@@ -30,6 +36,9 @@ export class MeasurementComponent implements OnInit {
     isEndPoint: boolean,
     path: LatLngLiteral[]
   } [] = [];
+
+  geodeticObjects: GeodeticObjectDto[] = [];
+
   currentDisplayedLatitude: number;
   currentDisplayedLongitude: number;
   zoom: number;
@@ -40,7 +49,9 @@ export class MeasurementComponent implements OnInit {
     private tachymetryService: TachymetryService,
     private toastr: ToastrService,
     private modalService: NgbModal,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private geodeticObjectService: GeodeticObjectService,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -52,7 +63,7 @@ export class MeasurementComponent implements OnInit {
         this.currentDisplayedLatitude = this.measurement.pickets[0].latitude;
       }
     }, error => {
-      this.utilsService.createErrorMessage(error.error.errors);
+      this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
     });
   }
 
@@ -72,8 +83,22 @@ export class MeasurementComponent implements OnInit {
       this.tachymetries = tachymetries;
       this.createPathsForMap(tachymetries);
     }, (error => {
-      this.toastr.error(error.errors);
+      this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
     }));
+  }
+
+  onShowGeodeticObjects(showGeodeticObjects: boolean) {
+    if (!showGeodeticObjects) {
+      this.geodeticObjects = [];
+      return;
+    }
+
+    this.geodeticObjectService.getGeodeticObjects(this.measurement.measurementInternalId)
+      .subscribe((geodeticObjects: GeodeticObjectDto[]) => {
+        this.geodeticObjects = geodeticObjects;
+        }, error => {
+        this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
+      });
   }
 
   onLineClicked(event: {angle: number, distance: number}) {
@@ -85,6 +110,17 @@ export class MeasurementComponent implements OnInit {
 
     const modalRef = this.modalService.open(TachymetryViewComponent, ngbModalOptions);
     modalRef.componentInstance.pathDetails = event;
+  }
+
+  onGeodeticObjectLineClicked(event: GeodeticObjectDto) {
+    const ngbModalOptions: NgbModalOptions = {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true
+    };
+
+    const modalRef = this.modalService.open(EditObjectModalComponent, ngbModalOptions);
+    modalRef.componentInstance.geodeticObject = event;
+    modalRef.componentInstance.isReadOnlyMode = true;
   }
 
   private createPathsForMap(tachymetries: TachymetryReport[]) {

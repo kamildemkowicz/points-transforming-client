@@ -19,6 +19,14 @@
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="options-body">
           <button
             ngbDropdownItem
+            (click)="showGeodeticObjectsOnMap()"
+          >
+            <em *ngIf="isGeodeticObjectsShown" class="far fa-check-square mr-1"></em>
+            <em *ngIf="!isGeodeticObjectsShown" class="far fa-square mr-1"></em>
+            Show geodetic objects
+          </button>
+          <button
+            ngbDropdownItem
             (click)="showTachymetryOnMap()"
           >
             <em *ngIf="isTachymetryShown" class="far fa-check-square mr-1"></em>

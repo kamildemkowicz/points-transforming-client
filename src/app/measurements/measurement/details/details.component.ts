@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MeasurementsModel } from '../../measurements.model';
 import { Picket } from '../../pickets/picket.model';
 
@@ -10,10 +10,13 @@ import { Picket } from '../../pickets/picket.model';
 export class DetailsComponent implements OnInit, OnChanges {
   @Input() measurement: MeasurementsModel;
   @Input() offTachymetry: boolean;
+
   @Output() picketChanged = new EventEmitter<Picket>();
   @Output() showTachymetry = new EventEmitter<boolean>();
+  @Output() showGeodeticObjects = new EventEmitter<boolean>();
 
   isTachymetryShown = false;
+  isGeodeticObjectsShown = false;
 
   constructor() { }
 
@@ -35,4 +38,8 @@ export class DetailsComponent implements OnInit, OnChanges {
     this.showTachymetry.emit(this.isTachymetryShown);
   }
 
+  showGeodeticObjectsOnMap() {
+    this.isGeodeticObjectsShown = !this.isGeodeticObjectsShown;
+    this.showGeodeticObjects.emit(this.isGeodeticObjectsShown);
+  }
 }

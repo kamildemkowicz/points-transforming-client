@@ -1,0 +1,72 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">How to create tachymetry stations file?</h5>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="activeModal.dismissAll('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body body-height">
+    Only supported file type is <strong>txt</strong>.<br>
+    Each station is separated by <strong>empty line</strong>.<br>
+    Single station must contain four lines which describe main data of station.<br>
+    First line is a <strong>station number</strong>. It supports only <strong>integers</strong>. This number has to be <strong>unique</strong>.<br>
+    Second line is a <strong>station name</strong><br>
+    Third line is a <strong>starting geodetic network point</strong>. The supported format of this point is the same like in default coordinates file format.<br>
+    First column has name of point. Second column is a coordinate X given in 2000 and third column is a coordinate Y in the same coordinates system.<br>
+    Forth line is a <strong>ending geodetic network point</strong>. The format of this line is the same as above.<br>
+    After this main station's information file should contain lines regarding to pickets measured data.<br>
+    Before those lines there should be an <strong>empty line</strong> placed between.<br>
+    Format of pickets measured data: each line has <strong>three</strong> columns.<br>
+    1. Picket name<br>
+    2. Coordinate X in 2000<br>
+    3. Coordinate Y in 2000<br><br>
+    Example:<br><br>
+    2 <br>
+    Station3 <br>
+    Osnowa3 5575321.99 6563290.64<br>
+    Osnowa4 5575381.99 6563220.64<br>
+    <br>
+    Pikieta100 20.22 10.0588<br>
+    Pikieta101 22.22 102.0588<br>
+    Pikieta102 43.22 104.0588<br>
+    Pikieta103 22.22 56.0588<br>
+    Pikieta104 69.22 120.0588<br>
+    <br>
+    3<br>
+    Station5<br>
+    Osnowa5 5575777.99 6563115.64<br>
+    Osnowa6 5575732.99 6563170.64<br>
+    <br>
+    Pikieta105 20.22 10.0588<br>
+    Pikieta106 25.22 132.0588<br>
+    Pikieta107 87.22 144.0588<br>
+    Pikieta108 43.22 57.0588<br>
+    Pikieta109 23.22 366.0588<br>
+    <br>
+    4<br>
+    Station6<br>
+    Osnowa7 5575551.99 6563190.64<br>
+    Osnowa8 5575721.99 6563250.64<br>
+    <br>
+    Pikieta110 50.22 10.0588<br>
+    Pikieta111 57.22 122.0588<br>
+    Pikieta112 32.22 388.0588<br>
+    Pikieta113 44.22 6.0588<br>
+    Pikieta114 32.22 12.0588
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="activeModal.dismissAll('Cancel button')"
+    >
+      Close
+    </button>
+  </div>
+</div>

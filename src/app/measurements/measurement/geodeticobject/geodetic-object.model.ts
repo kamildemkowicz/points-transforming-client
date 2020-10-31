@@ -6,5 +6,6 @@ export class GeodeticObject {
   description: string;
   symbol: string;
   color: string;
+  measurementInternalId: string;
   singleLines: SingleLine[];
 }

@@ -33,11 +33,6 @@ export class MapComponent implements OnInit, OnChanges {
     objectPath: { lat: number, lng: number }[]
   } = { objectPath: [] };
 
-  // created online not saved
-  @Input() objectsCreated: {
-    objectPath: { lat: number, lng: number }[]
-  } [] = [];
-
   // from db
   @Input() objectsSaved: GeodeticObjectDto[];
 

@@ -11,6 +11,7 @@ import { MeasuringStation } from '../models/measuring-station.model';
 import { TachymetryService } from '../tachymetry.service';
 import { TachymetryReport } from '../models/tachymetry-report/tachymetry-report.model';
 import { PicketMeasurementData } from '../models/picket-measurement-data.model';
+import {TachymetryInformationHelperComponent} from "./tachymetry-information-helper/tachymetry-information-helper.component";
 
 @Component({
   selector: 'app-tachymetry-form',
@@ -201,6 +202,16 @@ export class TachymetryFormComponent implements OnInit {
         this.toastr.error(error.error.message, null, { timeOut: 3000 });
       })
     );
+  }
+
+  openTachymetryInfoModal() {
+    const ngbModalOptions: NgbModalOptions = {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'xl'
+    };
+
+    this.modalService.open(TachymetryInformationHelperComponent, ngbModalOptions);
   }
 
   openEditMeasuringStation(measuringStationToEdit?: MeasuringStation, index?: number) {

@@ -18,6 +18,9 @@ import { GeodeticObject } from '../measurements/measurement/geodeticobject/geode
 import { GeodeticObjectService } from '../measurements/measurement/geodeticobject/geodetic-object.service';
 import { GeodeticObjectDto } from '../measurements/measurement/geodeticobject/geodetic-object-dto.model';
 import { EditObjectModalComponent } from './edit-object-modal/edit-object-modal.component';
+import {
+  PicketsUploadingInfoHelperComponent
+} from '../measurements/measurement/pickets-uploading-info-helper/pickets-uploading-info-helper.component';
 
 @Component({
   selector: 'app-edit-measurement-form',
@@ -29,6 +32,8 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   measurementForm: FormGroup;
   picketAddedSubscription: Subscription;
   objectAddedSubscription: Subscription;
+  objectEditedSubscription: Subscription;
+  objectRemovedSubscription: Subscription;
   copyPicket: Picket[];
   districts: District[] = [];
   selectedDistrict: District;
@@ -41,13 +46,6 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   editedObject: {
     objectPath: { picketInternalId: string, lat: number, lng: number } []
   }  = { objectPath: [] };
-  currentObjectIndex = 0;
-
-  objectsCreated: {
-    symbol: string,
-    color: string,
-    objectPath: { picketInternalId: string, lat: number, lng: number }[]
-  } [] = [];
 
   geodeticObjectsSaved: GeodeticObjectDto[] = [];
 
@@ -111,8 +109,7 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
       place: new FormControl(null, [Validators.required]),
       owner: new FormControl(null, [Validators.required]),
       districtId: new FormControl(null, [Validators.required]),
-      pickets: new FormArray([]),
-      geodeticObjects: new FormArray([])
+      pickets: new FormArray([])
     });
 
     this.route.data.subscribe((resolve) => {
@@ -146,6 +143,10 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
 
     if (this.objectAddedSubscription) {
       this.objectAddedSubscription.unsubscribe();
+    }
+
+    if (this.objectEditedSubscription) {
+      this.objectEditedSubscription.unsubscribe();
     }
   }
 
@@ -255,9 +256,24 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
 
     const modalRef = this.modalService.open(EditObjectModalComponent, ngbModalOptions);
     modalRef.componentInstance.geodeticObject = event;
+    modalRef.componentInstance.measurementInternalId = this.measurement.measurementInternalId;
 
-    this.objectAddedSubscription = modalRef.componentInstance.objectEdited.subscribe((objectEdited: GeodeticObject) => {
-      this.addGeodeticObjectToForm(objectEdited);
+    this.objectEditedSubscription = modalRef.componentInstance.objectEdited.subscribe((objectEdited: GeodeticObject) => {
+      this.geodeticObjectService.updateGeodeticObject(objectEdited).subscribe((geodeticObjectUpdated) => {
+        this.notificationService.showSuccess('Object ' + objectEdited.name + ' has been updated', null);
+        this.fetchGeodeticObjects();
+      }, error => {
+        this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
+      });
+    });
+
+    this.objectRemovedSubscription = modalRef.componentInstance.objectRemoved.subscribe((objectRemoved: GeodeticObject) => {
+      this.geodeticObjectService.deleteObject(objectRemoved.id).subscribe((result) => {
+        this.notificationService.showSuccess('Geodetic object has been removed', null);
+        this.fetchGeodeticObjects();
+      }, error => {
+        this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
+      });
     });
   }
 
@@ -282,14 +298,16 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
 
     const modalRef = this.modalService.open(AddObjectModalComponent, ngbModalOptions);
     modalRef.componentInstance.path = path;
+    modalRef.componentInstance.measurementInternalId = this.measurement.measurementInternalId;
 
     this.objectAddedSubscription = modalRef.componentInstance.objectAdded.subscribe((objectAdded: GeodeticObject) => {
-      this.objectsCreated[this.currentObjectIndex] = { symbol: objectAdded.symbol, color: objectAdded.color, objectPath: [] };
-      this.objectsCreated[this.currentObjectIndex].objectPath = this.editedObject.objectPath.slice();
-      this.editedObject.objectPath = [];
-      this.picketInternalIdsToHighlight = [];
-      this.currentObjectIndex++;
-      this.addGeodeticObjectToForm(objectAdded);
+      this.geodeticObjectService.createGeodeticObject(objectAdded).subscribe((objectSaved: GeodeticObjectDto) => {
+        this.geodeticObjectsSaved.push(objectSaved);
+        this.editedObject.objectPath = [];
+        this.picketInternalIdsToHighlight = [];
+      }, error => {
+        this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
+      });
     });
   }
 
@@ -369,13 +387,9 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     if (!this.isGeodeticObjectsShown && !this.areGeodeticObjectsAlreadyFetched) {
       this.geodeticObjectService.getGeodeticObjects(this.measurement.measurementInternalId)
         .subscribe((geodeticObjects: GeodeticObjectDto[]) => {
-          this.geodeticObjectsSaved = geodeticObjects;
-
-          geodeticObjects.forEach((geodeticObject) => {
-            this.addGeodeticObjectDtoToForm(geodeticObject);
-          });
+            this.geodeticObjectsSaved = geodeticObjects;
           }, error => {
-          this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
+            this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
         });
       this.areGeodeticObjectsAlreadyFetched = true;
       this.isGeodeticObjectsShown = !this.isGeodeticObjectsShown;
@@ -386,50 +400,24 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  addGeodeticObjectToForm(geodeticObject: GeodeticObject) {
-    const control = new FormGroup({
-      id: new FormControl(geodeticObject.id),
-      name: new FormControl(geodeticObject.name, [Validators.required]),
-      description: new FormControl(geodeticObject.description),
-      symbol: new FormControl(geodeticObject.symbol, [Validators.required]),
-      color: new FormControl(geodeticObject.color, [Validators.required]),
-      singleLines: new FormArray([])
-    });
+  openPicketsUploadingHelper() {
+    const ngbModalOptions: NgbModalOptions = {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'xl'
+    };
 
-    geodeticObject.singleLines.forEach((singleLine) => {
-      const singleLineControl = new FormGroup({
-        id: new FormControl(singleLine.id),
-        startPicketInternalId: new FormControl(singleLine.startPicketInternalId, [Validators.required]),
-        endPicketInternalId: new FormControl(singleLine.endPicketInternalId, [Validators.required])
-      });
-
-      (control.get('singleLines') as FormArray).push(singleLineControl);
-    });
-
-    (this.measurementForm.get('geodeticObjects') as FormArray).push(control);
+    this.modalService.open(PicketsUploadingInfoHelperComponent, ngbModalOptions);
   }
 
-  addGeodeticObjectDtoToForm(geodeticObject: GeodeticObjectDto) {
-    const control = new FormGroup({
-      id: new FormControl(geodeticObject.id),
-      name: new FormControl(geodeticObject.name, [Validators.required]),
-      description: new FormControl(geodeticObject.description),
-      symbol: new FormControl(geodeticObject.symbol, [Validators.required]),
-      color: new FormControl(geodeticObject.color, [Validators.required]),
-      singleLines: new FormArray([])
-    });
-
-    geodeticObject.singleLines.forEach((singleLine) => {
-      const singleLineControl = new FormGroup({
-        id: new FormControl(singleLine.id),
-        startPicketInternalId: new FormControl(singleLine.startPicket.picketInternalId, [Validators.required]),
-        endPicketInternalId: new FormControl(singleLine.endPicket.picketInternalId, [Validators.required])
+  private fetchGeodeticObjects() {
+    this.geodeticObjectsSaved = [];
+    this.geodeticObjectService.getGeodeticObjects(this.measurement.measurementInternalId)
+      .subscribe((geodeticObjects: GeodeticObjectDto[]) => {
+        this.geodeticObjectsSaved = geodeticObjects;
+      }, error => {
+        this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
       });
-
-      (control.get('singleLines') as FormArray).push(singleLineControl);
-    });
-
-    (this.measurementForm.get('geodeticObjects') as FormArray).push(control);
   }
 
   onSubmit() {

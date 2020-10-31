@@ -49,6 +49,10 @@ import { NotificationService } from './general/notification.service';
 import { AddObjectModalComponent } from './edit-measurement-form/add-object-modal/add-object-modal.component';
 import { GeodeticObjectService } from './measurements/measurement/geodeticobject/geodetic-object.service';
 import { EditObjectModalComponent } from './edit-measurement-form/edit-object-modal/edit-object-modal.component';
+import {
+  TachymetryInformationHelperComponent
+} from './tachymetry/tachymetry-form/tachymetry-information-helper/tachymetry-information-helper.component';
+import { PicketsUploadingInfoHelperComponent } from './measurements/measurement/pickets-uploading-info-helper/pickets-uploading-info-helper.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +79,9 @@ import { EditObjectModalComponent } from './edit-measurement-form/edit-object-mo
     TachymetryReportComponent,
     TachymetryViewComponent,
     AddObjectModalComponent,
-    EditObjectModalComponent
+    EditObjectModalComponent,
+    TachymetryInformationHelperComponent,
+    PicketsUploadingInfoHelperComponent
   ],
   imports: [
     BrowserModule,
@@ -122,7 +128,9 @@ import { EditObjectModalComponent } from './edit-measurement-form/edit-object-mo
     AddMeasuringStationModalComponent,
     TachymetryViewComponent,
     AddObjectModalComponent,
-    EditObjectModalComponent
+    EditObjectModalComponent,
+    TachymetryInformationHelperComponent,
+    PicketsUploadingInfoHelperComponent
   ]
 })
 export class AppModule { }

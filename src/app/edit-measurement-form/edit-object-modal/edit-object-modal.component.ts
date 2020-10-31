@@ -3,7 +3,6 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GeodeticObject } from '../../measurements/measurement/geodeticobject/geodetic-object.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GeodeticObjectDto } from '../../measurements/measurement/geodeticobject/geodetic-object-dto.model';
-import { GeodeticObjectService } from '../../measurements/measurement/geodeticobject/geodetic-object.service';
 
 @Component({
   selector: 'app-edit-object-modal',
@@ -12,23 +11,27 @@ import { GeodeticObjectService } from '../../measurements/measurement/geodeticob
 })
 export class EditObjectModalComponent implements OnInit {
   @Input() geodeticObject: GeodeticObjectDto;
+  @Input() measurementInternalId: string;
+  @Input() isReadOnlyMode = false;
 
   @Output() objectEdited = new EventEmitter<GeodeticObject>();
+  @Output() objectRemoved = new EventEmitter<GeodeticObject>();
 
   objectForm: FormGroup;
 
   constructor(
-    private activeModal: NgbModal,
-    private geodeticObjectService: GeodeticObjectService
+    private activeModal: NgbModal
   ) { }
 
   ngOnInit() {
     this.objectForm = new FormGroup({
+      id: new FormControl(this.geodeticObject.id, [Validators.required]),
       name: new FormControl(this.geodeticObject.name, [Validators.required]),
       description: new FormControl(this.geodeticObject.description),
       symbol: new FormControl(this.geodeticObject.symbol, [Validators.required]),
       color: new FormControl(this.geodeticObject.color, [Validators.required]),
-      singleLines: new FormArray([])
+      singleLines: new FormArray([]),
+      measurementInternalId: new FormControl(this.measurementInternalId, [Validators.required])
     });
 
     this.createSingleLines();
@@ -63,7 +66,7 @@ export class EditObjectModalComponent implements OnInit {
   }
 
   removeObject() {
-    this.geodeticObjectService.deleteObject(this.geodeticObject.id);
+    this.objectRemoved.emit(this.objectForm.value);
     this.activeModal.dismissAll();
   }
 

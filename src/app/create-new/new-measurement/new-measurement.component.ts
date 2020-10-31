@@ -9,6 +9,10 @@ import { DistrictResolverService } from '../../measurements/district/district-re
 import { District } from '../../measurements/district/district.model';
 import { UtilsService } from '../../general/utils.service';
 import { NotificationService } from '../../general/notification.service';
+import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import {
+  PicketsUploadingInfoHelperComponent
+} from '../../measurements/measurement/pickets-uploading-info-helper/pickets-uploading-info-helper.component';
 
 @Component({
   selector: 'app-new-measurement',
@@ -24,7 +28,8 @@ export class NewMeasurementComponent implements OnInit {
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private utilsService: UtilsService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private modalService: NgbModal
   ) { }
 
   get name() {
@@ -159,6 +164,16 @@ export class NewMeasurementComponent implements OnInit {
         (this.measurementForm.get('pickets') as FormArray).removeAt(i);
       }
     }
+  }
+
+  openPicketsUploadingHelper() {
+    const ngbModalOptions: NgbModalOptions = {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'xl'
+    };
+
+    this.modalService.open(PicketsUploadingInfoHelperComponent, ngbModalOptions);
   }
 
   onSubmit() {

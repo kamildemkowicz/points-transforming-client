@@ -39,14 +39,6 @@
     >
     </agm-polyline-point>
   </agm-polyline>
-  <agm-polyline *ngFor="let object of objectsCreated" [strokeColor]="'#000000'">
-    <agm-polyline-point
-      *ngFor="let point of object.objectPath"
-      [latitude]="point.lat"
-      [longitude]="point.lng"
-    >
-    </agm-polyline-point>
-  </agm-polyline>
   <agm-polyline
     *ngFor="let object of objectsSaved"
     [strokeColor]="object.color"

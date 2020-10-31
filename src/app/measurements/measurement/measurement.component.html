@@ -6,6 +6,7 @@
       [offTachymetry]=""
       (picketChanged)="onPicketChanged($event)"
       (showTachymetry)="onShowTachymetry($event)"
+      (showGeodeticObjects)="onShowGeodeticObjects($event)"
     >
     </app-details>
   </div>
@@ -17,7 +18,9 @@
       [currentDisplayedLongitude]="currentDisplayedLongitude"
       [zoom]="zoom"
       [pathsList]="pathsList"
+      [objectsSaved]="geodeticObjects"
       (lineClicked)="onLineClicked($event)"
+      (objectLineClicked)="onGeodeticObjectLineClicked($event)"
     >
     </app-map>
   </div>

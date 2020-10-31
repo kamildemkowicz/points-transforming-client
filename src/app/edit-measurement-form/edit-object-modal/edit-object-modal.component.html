@@ -1,7 +1,7 @@
 <div class="modal-content">
   <form [formGroup]="objectForm">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Create new object</h5>
+      <h5 class="modal-title" id="exampleModalLabel">Edit object</h5>
       <button
         type="button"
         class="close"
@@ -21,6 +21,7 @@
             id="name"
             placeholder="Enter object name"
             formControlName="name"
+            [readOnly]="isReadOnlyMode"
           >
           <span *ngIf="!name.valid && name.touched" class="help-block">
             <span *ngIf="name.errors['required']" class="error-message mt-1">
@@ -36,6 +37,7 @@
             id="description"
             placeholder="Enter object description"
             formControlName="description"
+            [readOnly]="isReadOnlyMode"
           >
         </div>
         <div class="form-group">
@@ -46,6 +48,7 @@
             id="symbol"
             placeholder="Enter object symbol"
             formControlName="symbol"
+            [readOnly]="isReadOnlyMode"
           >
           <span *ngIf="!symbol.valid && symbol.touched" class="help-block">
             <span *ngIf="symbol.errors['required']" class="error-message mt-1">
@@ -61,6 +64,7 @@
             id="color"
             placeholder="Enter object color"
             formControlName="color"
+            [readOnly]="isReadOnlyMode"
           >
           <span *ngIf="!color.valid && color.touched" class="help-block">
             <span *ngIf="color.errors['required']" class="error-message mt-1">
@@ -93,13 +97,14 @@
         type="submit"
         class="btn btn-primary"
         (click)="onSubmit()"
-        [disabled]="objectForm.invalid"
+        [disabled]="objectForm.invalid || isReadOnlyMode"
       >
         Update
       </button>
       <button
         type="button"
         class="btn btn-danger"
+        [disabled]="isReadOnlyMode"
         (click)="removeObject()"
       >
         Delete
