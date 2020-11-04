@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { Picket } from '../picket.model';
 
 @Component({
@@ -11,8 +11,11 @@ export class PicketsTableComponent implements OnInit, OnChanges {
   @Output() picketChanged = new EventEmitter<Picket>();
 
   selectedPicket: Picket;
+  tableHeight: string;
 
-  constructor() { }
+  constructor() {
+    this.tableHeight = (window.innerHeight * 0.055).toFixed(0) + 'vh';
+  }
 
   ngOnInit() {
     if (this.pickets.length) {
@@ -30,4 +33,10 @@ export class PicketsTableComponent implements OnInit, OnChanges {
     this.selectedPicket = picket;
     this.picketChanged.emit(picket);
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.tableHeight = (window.innerHeight * 0.055).toFixed(0) + 'vh';
+  }
+
 }

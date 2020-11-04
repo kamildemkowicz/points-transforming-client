@@ -3,23 +3,23 @@
     <app-details
       class="w-100"
       [measurement]="measurement"
-      [offTachymetry]=""
       (picketChanged)="onPicketChanged($event)"
       (showTachymetry)="onShowTachymetry($event)"
       (showGeodeticObjects)="onShowGeodeticObjects($event)"
     >
     </app-details>
   </div>
-  <div class="d-flex w-100">
+  <div class="d-flex w-75">
     <app-map
-      [heightMap]="'750px'"
+      [heightMap]="mapHeight"
+      [widthMap]="mapWidth"
       [pickets]="measurement.pickets"
       [currentDisplayedLatitude]="currentDisplayedLatitude"
       [currentDisplayedLongitude]="currentDisplayedLongitude"
       [zoom]="zoom"
-      [pathsList]="pathsList"
+      [measuredTachymetryPickets]="measuredTachymetryPickets"
       [objectsSaved]="geodeticObjects"
-      (lineClicked)="onLineClicked($event)"
+      (tachymetryLineClicked)="onLineClicked($event)"
       (objectLineClicked)="onGeodeticObjectLineClicked($event)"
     >
     </app-map>

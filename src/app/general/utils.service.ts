@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import {PicketReport} from "../tachymetry/models/tachymetry-report/picket-report.model";
+import {LatLngLiteral} from "@agm/core";
 
 @Injectable()
 export class UtilsService {
@@ -25,5 +27,19 @@ export class UtilsService {
     });
 
     return errorMessage;
+  }
+
+  calculateControlPointsDistance(startingPoint: PicketReport, endPoint: PicketReport): number {
+    const res1 = Math.pow((endPoint.latitude - startingPoint.latitude), 2);
+    const res2 = Math.pow((Math.cos(((startingPoint.latitude * Math.PI) / 180)) * (endPoint.longitude - startingPoint.longitude)), 2);
+
+    return +((Math.sqrt(res1 + res2)) * (40075.704 / 360) * 1000).toFixed(2) ;
+  }
+
+  createPath(picketFrom: PicketReport, picketTo: PicketReport): LatLngLiteral[] {
+    return [
+      { lat: picketFrom.latitude,  lng: picketFrom.longitude },
+      { lat: picketTo.latitude,  lng: picketTo.longitude }
+    ];
   }
 }

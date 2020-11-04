@@ -56,17 +56,13 @@
         <div class="form-group">
           <label for="color">Object color:</label>
           <input
-            type="text"
+            [value]="currentColor"
+            [style.background]="currentColor"
+            [(colorPicker)]="currentColor"
+            [cpCancelButton]="true"
             class="form-control w-75"
             id="color"
-            placeholder="Enter object color"
-            formControlName="color"
-          >
-          <span *ngIf="!color.valid && color.touched" class="help-block">
-            <span *ngIf="color.errors['required']" class="error-message mt-1">
-              The object color is required!
-            </span>
-          </span>
+          />
         </div>
       </div>
       <div class="d-flex flex-column pt-3 path-view">

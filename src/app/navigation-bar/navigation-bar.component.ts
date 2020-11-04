@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {SpinnerService} from "../general/spinner/spinner.service";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationBarComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private spinnerService: SpinnerService
+  ) { }
 
   ngOnInit() {
   }
 
+  showSpinner() {
+    this.spinnerService.show();
+  }
 }

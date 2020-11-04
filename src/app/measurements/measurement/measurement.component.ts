@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { ActivatedRoute, Routes } from '@angular/router';
 import { MeasurementResolverService } from './measurement-resolver.service';
 import { MeasurementsModel } from '../measurements.model';
@@ -14,8 +14,7 @@ import { UtilsService } from '../../general/utils.service';
 import { GeodeticObjectDto } from './geodeticobject/geodetic-object-dto.model';
 import { GeodeticObjectService } from './geodeticobject/geodetic-object.service';
 import { NotificationService } from '../../general/notification.service';
-import {EditObjectModalComponent} from "../../edit-measurement-form/edit-object-modal/edit-object-modal.component";
-import {GeodeticObject} from "./geodeticobject/geodetic-object.model";
+import { EditObjectModalComponent } from '../../edit-measurement-form/edit-object-modal/edit-object-modal.component';
 
 @Component({
   selector: 'app-measurement',
@@ -26,7 +25,7 @@ export class MeasurementComponent implements OnInit {
   measurement: MeasurementsModel;
   tachymetries: TachymetryReport[];
 
-  pathsList: {
+  measuredTachymetryPickets: {
     startingPoint: PicketReport,
     endPoint: PicketReport,
     angle: number,
@@ -42,7 +41,8 @@ export class MeasurementComponent implements OnInit {
   currentDisplayedLatitude: number;
   currentDisplayedLongitude: number;
   zoom: number;
-  isTachymetryOn = false;
+  mapWidth: string;
+  mapHeight: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -53,6 +53,12 @@ export class MeasurementComponent implements OnInit {
     private geodeticObjectService: GeodeticObjectService,
     private notificationService: NotificationService
   ) {
+    if (window.innerWidth < 1500) {
+      this.mapWidth = (window.innerWidth * 0.32).toFixed(0) + 'px';
+    } else {
+      this.mapWidth = (window.innerWidth * 0.42).toFixed(0) + 'px';
+    }
+    this.mapHeight = (window.innerHeight * 0.86).toFixed(0) + 'px';
   }
 
   ngOnInit() {
@@ -67,6 +73,17 @@ export class MeasurementComponent implements OnInit {
     });
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.mapHeight = (window.innerHeight * 0.86).toFixed(0) + 'px';
+    if (window.innerWidth < 1500) {
+      this.mapWidth = (window.innerWidth * 0.32).toFixed(0) + 'px';
+    } else {
+      this.mapWidth = (window.innerWidth * 0.42).toFixed(0) + 'px';
+    }
+
+  }
+
   onPicketChanged(picket: Picket) {
     this.currentDisplayedLongitude = picket.longitude;
     this.currentDisplayedLatitude = picket.latitude;
@@ -75,7 +92,7 @@ export class MeasurementComponent implements OnInit {
 
   onShowTachymetry(showTachymetry: boolean) {
     if (!showTachymetry) {
-      this.pathsList = [];
+      this.measuredTachymetryPickets = [];
       return;
     }
 
@@ -126,46 +143,32 @@ export class MeasurementComponent implements OnInit {
   private createPathsForMap(tachymetries: TachymetryReport[]) {
     tachymetries.forEach((tachymetry) => {
       tachymetry.measuringStations.forEach((station) => {
-        const controlPointsDistance = this.calculateControlPointsDistance(station.startingPoint, station.endPoint);
-        this.pathsList.push({
+        const controlPointsDistance = this.utilsService.calculateControlPointsDistance(station.startingPoint, station.endPoint);
+        this.measuredTachymetryPickets.push({
           startingPoint: station.startingPoint,
           endPoint: station.endPoint,
           distance: 0,
           controlPointsDistance,
           angle: 0,
           measuredPicket: station.endPoint,
-          path: this.createPath(station.startingPoint, station.endPoint),
+          path: this.utilsService.createPath(station.startingPoint, station.endPoint),
           isEndPoint: true
         });
 
         station.measuringPickets.forEach((measuredPicket) => {
-          this.pathsList.push({
+          this.measuredTachymetryPickets.push({
             startingPoint: station.startingPoint,
             endPoint: station.endPoint,
             distance: measuredPicket.distance,
             controlPointsDistance,
             angle: measuredPicket.angle,
             measuredPicket: measuredPicket.calculatedPicket,
-            path: this.createPath(station.startingPoint, measuredPicket.calculatedPicket),
+            path: this.utilsService.createPath(station.startingPoint, measuredPicket.calculatedPicket),
             isEndPoint: false
           });
         });
       });
     });
-  }
-
-  private calculateControlPointsDistance(startingPoint: PicketReport, endPoint: PicketReport): number {
-    const res1 = Math.pow((endPoint.latitude - startingPoint.latitude), 2);
-    const res2 = Math.pow((Math.cos(((startingPoint.latitude * Math.PI) / 180)) * (endPoint.longitude - startingPoint.longitude)), 2);
-
-    return +((Math.sqrt(res1 + res2)) * (40075.704 / 360) * 1000).toFixed(2) ;
-  }
-
-  private createPath(picketFrom: PicketReport, picketTo: PicketReport): LatLngLiteral[] {
-    return [
-      { lat: picketFrom.latitude,  lng: picketFrom.longitude },
-      { lat: picketTo.latitude,  lng: picketTo.longitude }
-    ];
   }
 }
 

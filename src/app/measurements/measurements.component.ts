@@ -3,6 +3,7 @@ import { ActivatedRoute, Routes } from '@angular/router';
 import { MeasurementsResolverService } from './measurements-resolver.service';
 import { MeasurementsModel } from './measurements.model';
 import { measurementRoutes } from './measurement/measurement.component';
+import { SpinnerService } from '../general/spinner/spinner.service';
 
 @Component({
   selector: 'app-measurements',
@@ -13,8 +14,11 @@ export class MeasurementsComponent implements OnInit {
   measurements: MeasurementsModel[];
 
   constructor(
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private spinnerService: SpinnerService
+  ) {
+    this.spinnerService.show();
+  }
 
   ngOnInit() {
     this.route.data.subscribe((resolve) => {

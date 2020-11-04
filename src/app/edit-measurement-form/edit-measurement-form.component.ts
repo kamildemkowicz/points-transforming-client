@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import { ActivatedRoute, Routes } from '@angular/router';
 import { MeasurementResolverService } from '../measurements/measurement/measurement-resolver.service';
 import { MeasurementsModel } from '../measurements/measurements.model';
@@ -21,6 +21,12 @@ import { EditObjectModalComponent } from './edit-object-modal/edit-object-modal.
 import {
   PicketsUploadingInfoHelperComponent
 } from '../measurements/measurement/pickets-uploading-info-helper/pickets-uploading-info-helper.component';
+import { TachymetryReport } from '../tachymetry/models/tachymetry-report/tachymetry-report.model';
+import { PicketReport } from '../tachymetry/models/tachymetry-report/picket-report.model';
+import { LatLngLiteral } from '@agm/core';
+import { TachymetryService } from '../tachymetry/tachymetry.service';
+import { TachymetryViewComponent } from '../measurements/measurement/tachymetry/tachymetry-view/tachymetry-view.component';
+import { SpinnerService } from '../general/spinner/spinner.service';
 
 @Component({
   selector: 'app-edit-measurement-form',
@@ -28,32 +34,6 @@ import {
   styleUrls: ['./edit-measurement-form.component.scss']
 })
 export class EditMeasurementFormComponent implements OnInit, OnDestroy {
-  measurement: MeasurementsModel;
-  measurementForm: FormGroup;
-  picketAddedSubscription: Subscription;
-  objectAddedSubscription: Subscription;
-  objectEditedSubscription: Subscription;
-  objectRemovedSubscription: Subscription;
-  copyPicket: Picket[];
-  districts: District[] = [];
-  selectedDistrict: District;
-
-  isObjectCreationMode = false;
-  isGeodeticObjectsShown = false;
-  areGeodeticObjectsAlreadyFetched = false;
-  picketInternalIdsToHighlight: string[] = [];
-
-  editedObject: {
-    objectPath: { picketInternalId: string, lat: number, lng: number } []
-  }  = { objectPath: [] };
-
-  geodeticObjectsSaved: GeodeticObjectDto[] = [];
-
-  @ViewChild('attachments', {static: true}) attachment: any;
-  fileReader = new FileReader();
-  fileList: File[] = [];
-  listOfFiles: any[] = [];
-  fileToPicketIndexes = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -62,8 +42,82 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private utilsService: UtilsService,
     private notificationService: NotificationService,
-    private geodeticObjectService: GeodeticObjectService
-  ) { }
+    private geodeticObjectService: GeodeticObjectService,
+    private tachymetryService: TachymetryService,
+    private spinnerService: SpinnerService
+  ) {
+    this.mapWidth = (window.innerWidth * 0.50).toFixed(0) + 'px';
+    this.mapHeight = (window.innerHeight * 0.75).toFixed(0) + 'px';
+    this.tableHeight = (window.innerHeight * 0.055).toFixed(0) + 'vh';
+    this.spinnerService.show();
+  }
+
+  get name() {
+    return this.measurementForm.get('name');
+  }
+
+  get owner() {
+    return this.measurementForm.get('owner');
+  }
+
+  get place() {
+    return this.measurementForm.get('place');
+  }
+
+  get district() {
+    return this.measurementForm.get('district');
+  }
+
+  get pickets() {
+    return (this.measurementForm.get('pickets') as FormArray).controls;
+  }
+  currentDisplayedLongitude: number;
+  currentDisplayedLatitude: number;
+  zoom: number;
+  mapWidth: string;
+  mapHeight: string;
+  tableHeight: string;
+
+  measurement: MeasurementsModel;
+  measurementForm: FormGroup;
+  copyPicket: Picket[];
+  districts: District[] = [];
+  selectedDistrict: District;
+  tachymetries: TachymetryReport[];
+
+  picketAddedSubscription: Subscription;
+  objectAddedSubscription: Subscription;
+  objectEditedSubscription: Subscription;
+  objectRemovedSubscription: Subscription;
+
+  isObjectCreationMode = false;
+  isGeodeticObjectsShown = false;
+  isTachymetryShown = false;
+  areGeodeticObjectsAlreadyFetched = false;
+  picketInternalIdsToHighlight: string[] = [];
+
+  editedObject: {
+    objectPath: { picketInternalId: string, lat: number, lng: number } []
+  }  = { objectPath: [] };
+
+  measuredTachymetryPickets: {
+    startingPoint: PicketReport,
+    endPoint: PicketReport,
+    angle: number,
+    distance: number,
+    controlPointsDistance: number,
+    measuredPicket: PicketReport,
+    isEndPoint: boolean,
+    path: LatLngLiteral[]
+  } [] = [];
+
+  geodeticObjectsSaved: GeodeticObjectDto[] = [];
+
+  @ViewChild('attachments', {static: true}) attachment: any;
+  fileReader = new FileReader();
+  fileList: File[] = [];
+  listOfFiles: any[] = [];
+  fileToPicketIndexes = {};
 
   private static validateSingleLine(line: any): boolean {
     const splittedLine = line.split(' ');
@@ -76,6 +130,13 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
       return true;
     }
     return isNaN(splittedLine[2]);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.mapWidth = (window.innerWidth * 0.50).toFixed(0) + 'px';
+    this.mapHeight = (window.innerHeight * 0.75).toFixed(0) + 'px';
+    this.tableHeight = (window.innerHeight * 0.055).toFixed(0) + 'vh';
   }
 
   private validateFile(lines: string[]): number[] {
@@ -132,8 +193,15 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
             });
           }
         }
-      }, error => this.utilsService.createErrorMessage(error.error.errors));
-    }, error => this.utilsService.createErrorMessage(error.error.errors));
+        this.spinnerService.hide();
+      }, error => {
+        this.spinnerService.hide();
+        this.utilsService.createErrorMessage(error.error.errors);
+      });
+    }, error => {
+      this.spinnerService.hide();
+      this.utilsService.createErrorMessage(error.error.errors);
+    });
   }
 
   ngOnDestroy(): void {
@@ -150,26 +218,6 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  get name() {
-    return this.measurementForm.get('name');
-  }
-
-  get owner() {
-    return this.measurementForm.get('owner');
-  }
-
-  get place() {
-    return this.measurementForm.get('place');
-  }
-
-  get district() {
-    return this.measurementForm.get('district');
-  }
-
-  get pickets() {
-    return (this.measurementForm.get('pickets') as FormArray).controls;
-  }
-
   createEmptyPicketForm() {
     const control = new FormGroup({
       name: new FormControl(null, [Validators.required]),
@@ -178,7 +226,8 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
       coordinateX2000: new FormControl(null),
       coordinateY2000: new FormControl(null),
       picketInternalId: new FormControl(null)
-    }, AtLeastOneFieldValidator);
+    }, [AtLeastOneCoordinatesSystemValidator, coordinates2000FieldValidator,
+      coordinatesGoogleFieldValidator]);
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
   }
@@ -191,7 +240,7 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
       coordinateX2000: new FormControl(picket.coordinateX2000),
       coordinateY2000: new FormControl(picket.coordinateY2000),
       picketInternalId: new FormControl(picket.picketInternalId)
-    }, AtLeastOneFieldValidator);
+    }, [AtLeastOneCoordinatesSystemValidator, coordinates2000FieldValidator, coordinatesGoogleFieldValidator]);
 
     (this.measurementForm.get('pickets') as FormArray).push(control);
 
@@ -208,7 +257,8 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
       coordinateX2000: new FormControl(event.picketEdited.coordinateX2000),
       coordinateY2000: new FormControl(event.picketEdited.coordinateY2000),
       picketInternalId: new FormControl(event.picketEdited.picketInternalId, [Validators.required])
-    }, AtLeastOneFieldValidator);
+    }, [AtLeastOneCoordinatesSystemValidator, coordinates2000FieldValidator,
+      coordinatesGoogleFieldValidator]);
 
     (this.measurementForm.get('pickets') as FormArray).setControl(event.index, control);
 
@@ -237,6 +287,11 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   }
 
   onObjectFinished(event: { picket: Picket, index: number }) {
+    if (!this.editedObject.objectPath.length) {
+      this.notificationService.showError('Caanot create object with one picket only.', null);
+      return;
+    }
+
     this.picketInternalIdsToHighlight.push(event.picket.picketInternalId);
     const newPath = this.editedObject.objectPath.slice();
     newPath.push({
@@ -303,12 +358,13 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     this.objectAddedSubscription = modalRef.componentInstance.objectAdded.subscribe((objectAdded: GeodeticObject) => {
       this.geodeticObjectService.createGeodeticObject(objectAdded).subscribe((objectSaved: GeodeticObjectDto) => {
         this.geodeticObjectsSaved.push(objectSaved);
-        this.editedObject.objectPath = [];
-        this.picketInternalIdsToHighlight = [];
       }, error => {
         this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
       });
     });
+
+    this.editedObject.objectPath = [];
+    this.picketInternalIdsToHighlight = [];
   }
 
   private openAddPicketModal(picket: Picket, index?: number) {
@@ -330,9 +386,26 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  onLineClicked(event: {angle: number, distance: number}) {
+    const ngbModalOptions: NgbModalOptions = {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'xl'
+    };
+
+    const modalRef = this.modalService.open(TachymetryViewComponent, ngbModalOptions);
+    modalRef.componentInstance.pathDetails = event;
+  }
+
   onRemovePicket(index: number) {
     (this.measurementForm.get('pickets') as FormArray).removeAt(index);
     this.copyPicket.splice(index, 1);
+  }
+
+  onPicketTableHover(picket: AbstractControl) {
+    this.currentDisplayedLongitude = picket.value.longitude;
+    this.currentDisplayedLatitude = picket.value.latitude;
+    this.zoom = this.zoom === 20 ? 19 : 20;
   }
 
   uploadFile(event) {
@@ -410,6 +483,53 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
     this.modalService.open(PicketsUploadingInfoHelperComponent, ngbModalOptions);
   }
 
+  showTachymetry() {
+    if (this.isTachymetryShown) {
+      this.measuredTachymetryPickets = [];
+      this.isTachymetryShown = !this.isTachymetryShown;
+      return;
+    }
+
+    this.tachymetryService.getTachymetries(this.measurement.measurementInternalId).subscribe((tachymetries: TachymetryReport[]) => {
+      this.tachymetries = tachymetries;
+      this.createPathsForMap(tachymetries);
+      this.isTachymetryShown = !this.isTachymetryShown;
+    }, (error => {
+      this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
+    }));
+  }
+
+  private createPathsForMap(tachymetries: TachymetryReport[]) {
+    tachymetries.forEach((tachymetry) => {
+      tachymetry.measuringStations.forEach((station) => {
+        const controlPointsDistance = this.utilsService.calculateControlPointsDistance(station.startingPoint, station.endPoint);
+        this.measuredTachymetryPickets.push({
+          startingPoint: station.startingPoint,
+          endPoint: station.endPoint,
+          distance: 0,
+          controlPointsDistance,
+          angle: 0,
+          measuredPicket: station.endPoint,
+          path: this.utilsService.createPath(station.startingPoint, station.endPoint),
+          isEndPoint: true
+        });
+
+        station.measuringPickets.forEach((measuredPicket) => {
+          this.measuredTachymetryPickets.push({
+            startingPoint: station.startingPoint,
+            endPoint: station.endPoint,
+            distance: measuredPicket.distance,
+            controlPointsDistance,
+            angle: measuredPicket.angle,
+            measuredPicket: measuredPicket.calculatedPicket,
+            path: this.utilsService.createPath(station.startingPoint, measuredPicket.calculatedPicket),
+            isEndPoint: false
+          });
+        });
+      });
+    });
+  }
+
   private fetchGeodeticObjects() {
     this.geodeticObjectsSaved = [];
     this.geodeticObjectService.getGeodeticObjects(this.measurement.measurementInternalId)
@@ -432,19 +552,52 @@ export class EditMeasurementFormComponent implements OnInit, OnDestroy {
   }
 }
 
-// TODO
-export function AtLeastOneFieldValidator(group: FormGroup): {[key: string]: any} {
+export function AtLeastOneCoordinatesSystemValidator(group: FormGroup): {[key: string]: any} {
   let isAtLeastOne = false;
+  const coordinates2000 = [];
+  const coordinatesGoogle = [];
   if (group && group.controls) {
     for (const control in group.controls) {
-      if (group.controls.hasOwnProperty(control) && group.controls[control].valid && group.controls[control].value) {
-        isAtLeastOne = true;
-        break;
+      if (control === 'coordinateX2000' || control === 'coordinateY2000') {
+        coordinates2000.push(control);
       }
+
+      if (control === 'longitude' || control === 'latitude') {
+        coordinatesGoogle.push(control);
+      }
+    }
+
+    if ((coordinates2000.length === 2 && group.controls[coordinates2000[0]].value && group.controls[coordinates2000[1]].value) ||
+      (coordinatesGoogle.length === 2 && group.controls[coordinatesGoogle[0]].value && group.controls[coordinatesGoogle[1]].value)) {
+      isAtLeastOne = true;
+    } else {
+      isAtLeastOne = false;
     }
   }
   return isAtLeastOne ? null : { required: true };
 }
+
+export const coordinates2000FieldValidator = (formGroup: FormGroup): ValidationErrors | null => {
+  const [coordinateX2000ControlValue, coordinateY2000ControlValue] = [
+    formGroup.get('coordinateX2000')!.value,
+    formGroup.get('coordinateY2000')!.value
+  ];
+
+  return coordinateX2000ControlValue && !coordinateY2000ControlValue
+    ? { linkedField: { value: coordinateY2000ControlValue } }
+    : null;
+};
+
+export const coordinatesGoogleFieldValidator = (formGroup: FormGroup): ValidationErrors | null => {
+  const [latitudeControlValue, longitudeControlValue] = [
+    formGroup.get('latitude')!.value,
+    formGroup.get('longitude')!.value
+  ];
+
+  return latitudeControlValue && !longitudeControlValue
+    ? { linkedField: { value: longitudeControlValue } }
+    : null;
+};
 
 export const editMeasurementRoutes: Routes = [
   {

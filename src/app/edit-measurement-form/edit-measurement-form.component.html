@@ -2,7 +2,12 @@
   <div class="d-flex flex-row justify-content-between">
     <h3 class="pb-3">Edit measurement</h3>
     <div class="d-flex flex-row pr-4">
-      <div class="object-creation-switch mr-2" (click)="switchGeodeticObjectsShown()">
+      <div class="object-creation-switch mr-3" (click)="showTachymetry()">
+        <em *ngIf="isTachymetryShown" class="far fa-check-square mr-1"></em>
+        <em *ngIf="!isTachymetryShown" class="far fa-square mr-1"></em>
+        Show tachymetry
+      </div>
+      <div class="object-creation-switch mr-3" (click)="switchGeodeticObjectsShown()">
         <em *ngIf="isGeodeticObjectsShown" class="far fa-check-square mr-1"></em>
         <em *ngIf="!isGeodeticObjectsShown" class="far fa-square mr-1"></em>
         Show objects
@@ -90,12 +95,16 @@
             </div>
           </div>
         </div>
-        <div class="d-flex flex-column w-100 pickets-table-form">
+        <div
+          class="d-flex flex-column w-100"
+          [ngStyle]="{ 'height': tableHeight }"
+        >
           <label class="mb-2 pt-2">Pickets:</label>
-          <div formArrayName="pickets" class="mb-2 overflow-auto">
+          <div formArrayName="pickets" class="mb-2 overflow-auto p-1">
             <div
               class="form-group"
               *ngFor="let picketControl of pickets; let i = index"
+              (mouseover)="onPicketTableHover(picketControl)"
             >
               <div class="d-flex flex-row" [formGroup]="picketControl">
                 <div class="form-group w-50 mr-2">
@@ -206,17 +215,22 @@
       </div>
       <div class="d-flex w-100">
         <app-map
+          [currentDisplayedLatitude]="currentDisplayedLatitude"
+          [currentDisplayedLongitude]="currentDisplayedLongitude"
+          [zoom]="zoom"
           [pickets]="copyPicket"
           [picketsToHighlight]="picketInternalIdsToHighlight"
           [editedObject]="editedObject"
           [objectsSaved]="isGeodeticObjectsShown ? geodeticObjectsSaved : []"
-          [heightMap]="'700px'"
-          [widthMap]="'900px'"
+          [heightMap]="mapHeight"
+          [widthMap]="mapWidth"
           [disableDoubleClickZoom]="true"
+          [measuredTachymetryPickets]="measuredTachymetryPickets"
 
           (picketAdded)="onPicketAddedFromMap($event)"
           (picketEdited)="onPicketEditedFromMap($event)"
 
+          (tachymetryLineClicked)="onLineClicked($event)"
           (objectFinished)="onObjectFinished($event)"
           (objectLineClicked)="onObjectLineClicked($event)"
         >

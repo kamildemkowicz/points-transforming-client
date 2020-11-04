@@ -4,12 +4,14 @@
     <div class="d-flex flex-row">
       <button
         [routerLink]="['/edit', measurement.measurementInternalId]"
+        (click)="showSpinner()"
         class="btn btn-primary mr-1"
       >
         Open edit mode
       </button>
       <button
         [routerLink]="['/tachymetry', measurement.measurementInternalId]"
+        (click)="showSpinner()"
         class="btn btn-primary mr-1"
       >
         Add tachymetry

@@ -18,6 +18,7 @@ export class EditObjectModalComponent implements OnInit {
   @Output() objectRemoved = new EventEmitter<GeodeticObject>();
 
   objectForm: FormGroup;
+  currentColor: string;
 
   constructor(
     private activeModal: NgbModal
@@ -35,6 +36,7 @@ export class EditObjectModalComponent implements OnInit {
     });
 
     this.createSingleLines();
+    this.currentColor = this.geodeticObject.color;
   }
 
   private createSingleLines() {
@@ -61,6 +63,7 @@ export class EditObjectModalComponent implements OnInit {
   }
 
   onSubmit() {
+    this.objectForm.controls.color.setValue(this.currentColor);
     this.objectEdited.emit(this.objectForm.value);
     this.activeModal.dismissAll();
   }

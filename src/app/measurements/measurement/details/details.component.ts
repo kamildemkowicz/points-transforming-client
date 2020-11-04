@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MeasurementsModel } from '../../measurements.model';
 import { Picket } from '../../pickets/picket.model';
+import { SpinnerService } from '../../../general/spinner/spinner.service';
 
 @Component({
   selector: 'app-details',
@@ -9,7 +10,6 @@ import { Picket } from '../../pickets/picket.model';
 })
 export class DetailsComponent implements OnInit, OnChanges {
   @Input() measurement: MeasurementsModel;
-  @Input() offTachymetry: boolean;
 
   @Output() picketChanged = new EventEmitter<Picket>();
   @Output() showTachymetry = new EventEmitter<boolean>();
@@ -18,7 +18,9 @@ export class DetailsComponent implements OnInit, OnChanges {
   isTachymetryShown = false;
   isGeodeticObjectsShown = false;
 
-  constructor() { }
+  constructor(
+    private spinnerService: SpinnerService
+  ) { }
 
   ngOnInit() {
   }
@@ -41,5 +43,9 @@ export class DetailsComponent implements OnInit, OnChanges {
   showGeodeticObjectsOnMap() {
     this.isGeodeticObjectsShown = !this.isGeodeticObjectsShown;
     this.showGeodeticObjects.emit(this.isGeodeticObjectsShown);
+  }
+
+  showSpinner() {
+    this.spinnerService.show();
   }
 }

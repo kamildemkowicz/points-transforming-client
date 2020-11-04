@@ -26,7 +26,7 @@
     (markerRightClick)="onMarkerRightClicked(picket, i)"
   ></agm-marker>
   <agm-polygon
-    *ngFor="let lineDetails of pathsList"
+    *ngFor="let lineDetails of measuredTachymetryPickets"
     [clickable]="true"
     [paths]="lineDetails.path"
     (polyClick)="onLineClicked($event, lineDetails)"

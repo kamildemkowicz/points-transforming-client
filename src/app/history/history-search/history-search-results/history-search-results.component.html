@@ -5,7 +5,7 @@
     <div class="w-25"><strong>New value</strong></div>
     <div class="w-25"><strong>Type</strong></div>
   </div>
-  <div class="overflow-auto history-results-overflow">
+  <div class="overflow-auto" [ngStyle]="{ 'max-height': tableHeight }">
     <div class="d-flex flex-column w-100 main-separator py-2" *ngFor="let historyChange of historyChanges.changes">
       <div class="d-flex flex-column w-100">
         <div class="d-flex flex-column w-100 measurement-separator">

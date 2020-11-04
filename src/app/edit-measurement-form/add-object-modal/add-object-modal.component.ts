@@ -15,6 +15,7 @@ export class AddObjectModalComponent implements OnInit {
   @Output() objectAdded = new EventEmitter<GeodeticObject>();
 
   objectForm: FormGroup;
+  currentColor: string;
 
   constructor(
     private activeModal: NgbModal
@@ -25,12 +26,13 @@ export class AddObjectModalComponent implements OnInit {
       name: new FormControl(null, [Validators.required]),
       description: new FormControl(null),
       symbol: new FormControl(null, [Validators.required]),
-      color: new FormControl(null, [Validators.required]),
+      color: new FormControl('#000000', [Validators.required]),
       singleLines: new FormArray([]),
       measurementInternalId: new FormControl(this.measurementInternalId, [Validators.required])
     });
 
     this.createSingleLines();
+    this.currentColor = '#000000';
   }
 
   private createSingleLines() {
@@ -59,6 +61,7 @@ export class AddObjectModalComponent implements OnInit {
   }
 
   onSubmit() {
+    this.objectForm.controls.color.setValue(this.currentColor);
     this.objectAdded.emit(this.objectForm.value);
     this.activeModal.dismissAll();
   }

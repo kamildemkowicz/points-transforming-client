@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router, Routes } from '@angular/router';
 import { MeasurementsModel } from '../../measurements/measurements.model';
-import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { AddMeasuringStationModalComponent } from './add-measuring-station-modal/add-measuring-station-modal.component';
@@ -11,22 +10,29 @@ import { MeasuringStation } from '../models/measuring-station.model';
 import { TachymetryService } from '../tachymetry.service';
 import { TachymetryReport } from '../models/tachymetry-report/tachymetry-report.model';
 import { PicketMeasurementData } from '../models/picket-measurement-data.model';
-import {TachymetryInformationHelperComponent} from "./tachymetry-information-helper/tachymetry-information-helper.component";
+import { TachymetryInformationHelperComponent } from './tachymetry-information-helper/tachymetry-information-helper.component';
+import { NotificationService } from '../../general/notification.service';
+import { UtilsService } from '../../general/utils.service';
+import { SpinnerService } from '../../general/spinner/spinner.service';
 
 @Component({
   selector: 'app-tachymetry-form',
   templateUrl: './tachymetry-form.component.html',
   styleUrls: ['./tachymetry-form.component.scss']
 })
-export class TachymetryFormComponent implements OnInit {
+export class TachymetryFormComponent implements OnInit, AfterViewInit {
 
   constructor(
     private route: ActivatedRoute,
     private tachymetryService: TachymetryService,
     private router: Router,
-    private toastr: ToastrService,
-    private modalService: NgbModal
-  ) { }
+    private modalService: NgbModal,
+    private notificationService: NotificationService,
+    private utilsService: UtilsService,
+    private spinnerService: SpinnerService
+  ) {
+    this.spinnerService.show();
+  }
 
   get tachymetryName() {
     return this.tachymetryForm.get('tachymetryMetaData.tachymetryName');
@@ -107,6 +113,10 @@ export class TachymetryFormComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.spinnerService.hide();
+  }
+
   onAddMeasuringStation(measuringStationAdded: MeasuringStation) {
     const control = new FormGroup({
       stationNumber: new FormControl(measuringStationAdded.stationNumber, [Validators.required]),
@@ -167,8 +177,9 @@ export class TachymetryFormComponent implements OnInit {
       const validationResult = this.validateFile(lines);
 
       if (validationResult.length) {
-        this.toastr.error('You have set tachymetry incorrectly in lines: ' + validationResult.toString(),
-          null);
+        this.notificationService.showError('You have set tachymetry incorrectly in lines: '
+            + validationResult.toString(), null);
+
         this.removeSelectedFile(0);
         return;
       }
@@ -196,11 +207,16 @@ export class TachymetryFormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.spinnerService.show();
     this.tachymetryService.createTachymetry(this.tachymetryForm.value).subscribe((tachymetryReport: TachymetryReport) => {
         this.tachymetryReport = tachymetryReport;
-      }, (error => {
-        this.toastr.error(error.error.message, null, { timeOut: 3000 });
-      })
+        this.tachymetryForm.reset();
+        this.spinnerService.hide();
+        this.notificationService.showSuccess('Tachymetry has been calculated, scroll bottom to see the report', null);
+      }, error => {
+        this.spinnerService.hide();
+        this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
+      }
     );
   }
 
@@ -260,7 +276,7 @@ export class TachymetryFormComponent implements OnInit {
           stationDetailsIndex++;
         } else {
           if (stationDetailsIndex !== 5) {
-            this.toastr.error('Station is created incorrectly', null);
+            this.notificationService.showError('Station is created incorrectly', null);
             return;
           } else {
             isStationDetails = false;

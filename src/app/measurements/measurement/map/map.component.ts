@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Picket } from '../../pickets/picket.model';
-import { AgmPolylinePoint, LatLngLiteral } from '@agm/core';
+import { LatLngLiteral } from '@agm/core';
 import { PicketReport } from '../../../tachymetry/models/tachymetry-report/picket-report.model';
-import {GeodeticObjectDto} from "../geodeticobject/geodetic-object-dto.model";
+import { GeodeticObjectDto } from '../geodeticobject/geodetic-object-dto.model';
 
 @Component({
   selector: 'app-map',
@@ -15,7 +15,7 @@ export class MapComponent implements OnInit, OnChanges {
   @Input() zoom: number;
   @Input() pickets: Picket[];
   @Input() picketsToHighlight: string[] = [];
-  @Input() pathsList: {
+  @Input() measuredTachymetryPickets: {
     startingPoint: PicketReport,
     endPoint: PicketReport,
     angle: number,
@@ -39,7 +39,7 @@ export class MapComponent implements OnInit, OnChanges {
   @Output() picketAdded = new EventEmitter<Picket>();
   @Output() picketEdited = new EventEmitter<{picket: Picket, index: number}>();
   @Output() objectFinished = new EventEmitter<{picket: Picket, index: number}>();
-  @Output() lineClicked = new EventEmitter<{
+  @Output() tachymetryLineClicked = new EventEmitter<{
     startingPoint: PicketReport,
     endPoint: PicketReport,
     angle: number,
@@ -64,12 +64,14 @@ export class MapComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.pathsList && changes.pathsList.currentValue) {
-      this.pathsList = changes.pathsList.currentValue;
+      this.measuredTachymetryPickets = changes.pathsList.currentValue;
     }
   }
 
   private setCurrentLocation() {
-    this.zoom = 15;
+    if (!this.zoom) {
+      this.zoom = 15;
+    }
 
     if (this.pickets && this.pickets.length) {
       this.currentDisplayedLatitude = this.pickets[0].latitude;
@@ -104,7 +106,7 @@ export class MapComponent implements OnInit, OnChanges {
 
   onLineClicked(event, path) {
     if (!path.isEndPoint) {
-      this.lineClicked.emit(path);
+      this.tachymetryLineClicked.emit(path);
     }
   }
 

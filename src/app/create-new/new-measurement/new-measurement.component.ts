@@ -13,6 +13,7 @@ import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {
   PicketsUploadingInfoHelperComponent
 } from '../../measurements/measurement/pickets-uploading-info-helper/pickets-uploading-info-helper.component';
+import {SpinnerService} from "../../general/spinner/spinner.service";
 
 @Component({
   selector: 'app-new-measurement',
@@ -29,7 +30,8 @@ export class NewMeasurementComponent implements OnInit {
     private route: ActivatedRoute,
     private utilsService: UtilsService,
     private notificationService: NotificationService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private spinnerService: SpinnerService
   ) { }
 
   get name() {
@@ -92,6 +94,10 @@ export class NewMeasurementComponent implements OnInit {
           districts: this.districts[0].id,
         });
       }
+      this.spinnerService.hide();
+    }, error => {
+      this.spinnerService.hide();
+      this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
     });
   }
 
@@ -178,11 +184,11 @@ export class NewMeasurementComponent implements OnInit {
 
   onSubmit() {
     this.measurementsService.createMeasurement(this.measurementForm.value).subscribe((measurementCreated: MeasurementsModel) => {
+      this.spinnerService.show();
       this.router.navigate(['measurements', measurementCreated.measurementInternalId]);
-    }, (error => {
+    }, error => {
       this.notificationService.showError(this.utilsService.createErrorMessage(error.error.errors), null);
-    })
-    );
+    });
   }
 
   private validateFile(lines: string[]): number[] {

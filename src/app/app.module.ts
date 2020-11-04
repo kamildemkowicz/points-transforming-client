@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -52,7 +52,13 @@ import { EditObjectModalComponent } from './edit-measurement-form/edit-object-mo
 import {
   TachymetryInformationHelperComponent
 } from './tachymetry/tachymetry-form/tachymetry-information-helper/tachymetry-information-helper.component';
-import { PicketsUploadingInfoHelperComponent } from './measurements/measurement/pickets-uploading-info-helper/pickets-uploading-info-helper.component';
+import {
+  PicketsUploadingInfoHelperComponent
+} from './measurements/measurement/pickets-uploading-info-helper/pickets-uploading-info-helper.component';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { SpinnerComponent } from './general/spinner/spinner.component';
+import {SpinnerDirective} from "./general/spinner/spinner.directive";
+import {SpinnerService} from "./general/spinner/spinner.service";
 
 @NgModule({
   declarations: [
@@ -81,7 +87,9 @@ import { PicketsUploadingInfoHelperComponent } from './measurements/measurement/
     AddObjectModalComponent,
     EditObjectModalComponent,
     TachymetryInformationHelperComponent,
-    PicketsUploadingInfoHelperComponent
+    PicketsUploadingInfoHelperComponent,
+    SpinnerComponent,
+    SpinnerDirective
   ],
   imports: [
     BrowserModule,
@@ -96,6 +104,7 @@ import { PicketsUploadingInfoHelperComponent } from './measurements/measurement/
     ReactiveFormsModule,
     NgxSpinnerModule,
     FormsModule,
+    ColorPickerModule,
     ToastrModule.forRoot({
       progressBar: true,
       progressAnimation: 'increasing',
@@ -107,6 +116,7 @@ import { PicketsUploadingInfoHelperComponent } from './measurements/measurement/
       closeButton: true
     })
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     MeasurementsService,
     measurementsProviders,
@@ -120,7 +130,8 @@ import { PicketsUploadingInfoHelperComponent } from './measurements/measurement/
     districtsProvider,
     UtilsService,
     NotificationService,
-    GeodeticObjectService
+    GeodeticObjectService,
+    SpinnerService
   ],
   bootstrap: [AppComponent],
   entryComponents: [
