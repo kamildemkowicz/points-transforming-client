@@ -211,6 +211,8 @@ export class TachymetryFormComponent implements OnInit, AfterViewInit {
     this.tachymetryService.createTachymetry(this.tachymetryForm.value).subscribe((tachymetryReport: TachymetryReport) => {
         this.tachymetryReport = tachymetryReport;
         this.tachymetryForm.reset();
+        this.listOfFiles = [];
+        this.fileList = [];
         this.spinnerService.hide();
         this.notificationService.showSuccess('Tachymetry has been calculated, scroll bottom to see the report', null);
       }, error => {

@@ -1,15 +1,71 @@
 <div class="d-flex flex-row flex-wrap navigation-bar p-4 align-content-center">
-  <span
-    class="mr-3"
-    (click)="showSpinner()"
-    [routerLink]="['']"
-    [routerLinkActive]="'nav-link-clicked'"
-    [routerLinkActiveOptions]="{ exact: true }"
-  >
-    Dashboard
-  </span>
-  <span class="mr-3" (click)="showSpinner()" [routerLink]="['/measurements']" [routerLinkActive]="'nav-link-clicked'">Measurements</span>
-  <span class="mr-3" (click)="showSpinner()" [routerLink]="['/create-new']" [routerLinkActive]="'nav-link-clicked'">Create new</span>
-  <span class="mr-3" (click)="showSpinner()" [routerLink]="['/history']" [routerLinkActive]="'nav-link-clicked'">History</span>
-  <span class="mr-3" (click)="showSpinner()" [routerLink]="['/tachymetry']" [routerLinkActive]="'nav-link-clicked'">Tachymetry</span>
+  <div class="d-flex flex-row w-75 justify-content-start">
+    <span
+      class="mr-3"
+      (click)="showSpinner()"
+      *ngIf="authority"
+      [routerLink]="['']"
+      [routerLinkActive]="'nav-link-clicked'"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Dashboard
+    </span>
+    <span
+      class="mr-3"
+      *ngIf="authority"
+      (click)="showSpinner()"
+      [routerLink]="['/measurements']"
+      [routerLinkActive]="'nav-link-clicked'"
+    >
+      Measurements
+    </span>
+    <span
+      class="mr-3"
+      *ngIf="authority"
+      (click)="showSpinner()"
+      [routerLink]="['/create-new']"
+      [routerLinkActive]="'nav-link-clicked'"
+    >
+      Create new
+    </span>
+    <span
+      class="mr-3"
+      *ngIf="authority"
+      (click)="showSpinner()"
+      [routerLink]="['/history']"
+      [routerLinkActive]="'nav-link-clicked'"
+    >
+      History
+    </span>
+    <span
+      class="mr-3"
+      *ngIf="authority"
+      (click)="showSpinner()"
+      [routerLink]="['/tachymetry']"
+      [routerLinkActive]="'nav-link-clicked'"
+    >
+      Tachymetry
+    </span>
+  </div>
+  <div class="d-flex flex-row w-25 justify-content-end">
+    <span
+      class="mr-3"
+      *ngIf="!authority"
+      (click)="showSpinner()"
+      [routerLink]="['/auth', 'login']"
+      [routerLinkActive]="'nav-link-clicked'"
+    >
+      Login
+    </span>
+    <span
+      class="mr-3"
+      *ngIf="!authority"
+      (click)="showSpinner()"
+      [routerLink]="['/signup']"
+      [routerLinkActive]="'nav-link-clicked'"
+    >
+      Sign up
+    </span>
+    <span class="mr-3" *ngIf="authority" (click)="logout()">Logout</span>
+  </div>
 </div>

@@ -1,0 +1,51 @@
+<div class="p-4">
+  <form [formGroup]="loginForm">
+    <div class="d-flex flex-column w-100 mr-3 align-items-center">
+      <div class="form-group w-25">
+        <label for="username">Username:</label>
+        <input
+          type="text"
+          class="form-control w-100"
+          id="username"
+          placeholder="Enter username"
+          formControlName="username"
+        >
+        <span *ngIf="!username.valid && username.touched" class="help-block">
+          <span *ngIf="username.errors['required']" class="error-message mt-1">
+            The username is required!
+          </span>
+          <span *ngIf="password.errors['minlength']" class="error-message mt-1">
+            Username must be at least 3 characters
+          </span>
+        </span>
+      </div>
+      <div class="form-group w-25">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          class="form-control w-100"
+          id="password"
+          placeholder="Enter password"
+          formControlName="password"
+        >
+        <span *ngIf="!password.valid && password.touched" class="help-block">
+          <span *ngIf="password.errors['required']" class="error-message mt-1">
+            The password is required!
+          </span>
+          <span *ngIf="password.errors['minlength']" class="error-message mt-1">
+            Password must be at least 6 characters
+          </span>
+        </span>
+      </div>
+      <button
+        class="btn btn-primary w-25"
+        (click)="onSubmit()"
+        [disabled]="loginForm.invalid || loginForm.untouched"
+      >
+        Login
+      </button>
+      <p class="mt-2">Don't have an account?</p>
+      <button [routerLink]="['/signup']" class="btn btn-primary w-25">Sign Up</button>
+    </div>
+  </form>
+</div>

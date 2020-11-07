@@ -6,9 +6,13 @@ import { createNewMeasurementRoutes } from './create-new/new-measurement/new-mea
 import { editMeasurementRoutes } from './edit-measurement-form/edit-measurement-form.component';
 import { historyRoutes } from './history/history.component';
 import { tachymetryRoutes } from './tachymetry/tachymetry.component';
+import { loginRoutes } from './user/login/login.component';
+import { registerRoutes } from './user/register/register.component';
 
 
 const routes: Routes = [
+  ...loginRoutes,
+  ...registerRoutes,
   ...dashboardRoutes,
   ...measurementsRoutes,
   ...createNewMeasurementRoutes,

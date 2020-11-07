@@ -31,10 +31,10 @@
             formControlName="place"
           >
           <span *ngIf="!place.valid && place.touched" class="help-block">
-          <span *ngIf="place.errors['required']" class="error-message mt-1">
-            The measurements place is required!
+            <span *ngIf="place.errors['required']" class="error-message mt-1">
+              The measurements place is required!
+            </span>
           </span>
-        </span>
         </div>
         <div class="form-group">
           <label for="owner">Owner:</label>

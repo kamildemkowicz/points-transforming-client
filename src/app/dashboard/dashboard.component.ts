@@ -29,6 +29,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.spinnerService.hide();
   }
+
+  showSpinner(): void {
+    this.spinnerService.show();
+  }
 }
 
 export const dashboardRoutes: Routes = [

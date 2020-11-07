@@ -57,8 +57,12 @@ import {
 } from './measurements/measurement/pickets-uploading-info-helper/pickets-uploading-info-helper.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SpinnerComponent } from './general/spinner/spinner.component';
-import {SpinnerDirective} from "./general/spinner/spinner.directive";
-import {SpinnerService} from "./general/spinner/spinner.service";
+import { SpinnerDirective } from './general/spinner/spinner.directive';
+import { SpinnerService } from './general/spinner/spinner.service';
+import { RegisterComponent } from './user/register/register.component';
+import { LoginComponent } from './user/login/login.component';
+import { TokenStorageService } from './user/auth/token-storage.service';
+import { httpInterceptorProviders } from './user/auth/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -89,7 +93,9 @@ import {SpinnerService} from "./general/spinner/spinner.service";
     TachymetryInformationHelperComponent,
     PicketsUploadingInfoHelperComponent,
     SpinnerComponent,
-    SpinnerDirective
+    SpinnerDirective,
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -131,7 +137,9 @@ import {SpinnerService} from "./general/spinner/spinner.service";
     UtilsService,
     NotificationService,
     GeodeticObjectService,
-    SpinnerService
+    SpinnerService,
+    TokenStorageService,
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent],
   entryComponents: [

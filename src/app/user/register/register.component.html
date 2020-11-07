@@ -1,0 +1,105 @@
+<div class="p-4">
+  <form [formGroup]="registerForm">
+    <div class="d-flex flex-column w-100 mr-3 align-items-center">
+      <div class="form-group w-25">
+        <label for="username">Username:</label>
+        <input
+          type="text"
+          class="form-control w-100"
+          id="username"
+          placeholder="Enter username"
+          formControlName="username"
+        >
+        <span *ngIf="!username.valid && username.touched" class="help-block">
+          <span *ngIf="username.errors['required']" class="error-message mt-1">
+            The username is required!
+          </span>
+          <span *ngIf="password.errors['minlength']" class="error-message mt-1">
+            Username must be at least 3 characters
+          </span>
+        </span>
+      </div>
+      <div class="form-group w-25">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          class="form-control w-100"
+          id="password"
+          placeholder="Enter password"
+          formControlName="password"
+        >
+        <span *ngIf="!password.valid && password.touched" class="help-block">
+          <span *ngIf="password.errors['required']" class="error-message mt-1">
+            The password is required!
+          </span>
+          <span *ngIf="password.errors['minlength']" class="error-message mt-1">
+            Password must be at least 6 characters
+          </span>
+        </span>
+      </div>
+      <div class="form-group w-25">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          class="form-control w-100"
+          id="email"
+          placeholder="Enter email"
+          formControlName="email"
+        >
+        <span *ngIf="!email.valid && email.touched" class="help-block">
+          <span *ngIf="email.errors['required']" class="error-message mt-1">
+            Email is required!
+          </span>
+          <span *ngIf="email.errors['email']" class="error-message mt-1">
+            Email form is incorrect.
+          </span>
+        </span>
+      </div>
+      <div class="form-group w-25">
+        <label for="firstName">First name:</label>
+        <input
+          type="text"
+          class="form-control w-100"
+          id="firstName"
+          placeholder="Enter first name"
+          formControlName="firstName"
+        >
+        <span *ngIf="!firstName.valid && firstName.touched" class="help-block">
+          <span *ngIf="firstName.errors['required']" class="error-message mt-1">
+            The first name is required!
+          </span>
+          <span *ngIf="firstName.errors['maxlength']" class="error-message mt-1">
+            First name must be at most 50 characters
+          </span>
+        </span>
+      </div>
+      <div class="form-group w-25">
+        <label for="lastName">Last name:</label>
+        <input
+          type="text"
+          class="form-control w-100"
+          id="lastName"
+          placeholder="Enter last name"
+          formControlName="lastName"
+        >
+        <span *ngIf="!lastName.valid && lastName.touched" class="help-block">
+          <span *ngIf="lastName.errors['required']" class="error-message mt-1">
+            The last name is required!
+          </span>
+          <span *ngIf="firstName.errors['maxlength']" class="error-message mt-1">
+            Last name must be at most 50 characters
+          </span>
+        </span>
+      </div>
+      <button
+        class="btn btn-primary w-25"
+        (click)="onSubmit()"
+        [disabled]="registerForm.invalid || registerForm.untouched"
+      >
+        Sign up
+      </button>
+      <p class="mt-2">Have already an account?</p>
+      <button [routerLink]="['/auth', 'login']" class="btn btn-primary w-25">Sign In</button>
+    </div>
+  </form>
+</div>
